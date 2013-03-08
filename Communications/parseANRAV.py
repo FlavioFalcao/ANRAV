@@ -12,3 +12,4 @@ while 1: # go forever
 #### end while
 
 ##stupid Windows!
+# Markus concurs!
