@@ -11,3 +11,4 @@ while 1: # go forever
      #### end if
 #### end while
 
+##stupid Windows!
