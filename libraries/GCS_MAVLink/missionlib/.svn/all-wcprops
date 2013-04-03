@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/3086/trunk/libraries/GCS_MAVLink/missionlib
+END
+waypoints.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/3017/trunk/libraries/GCS_MAVLink/missionlib/waypoints.h
+END
+waypoints.c
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/3080/trunk/libraries/GCS_MAVLink/missionlib/waypoints.c
+END

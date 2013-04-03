@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/3081/trunk/libraries/ModeFilter
+END
+ModeFilter.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/2968/trunk/libraries/ModeFilter/ModeFilter.h
+END
+keywords.txt
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/2968/trunk/libraries/ModeFilter/keywords.txt
+END
+ModeFilter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/3081/trunk/libraries/ModeFilter/ModeFilter.cpp
+END

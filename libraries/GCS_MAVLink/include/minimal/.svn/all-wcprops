@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/3017/trunk/libraries/GCS_MAVLink/include/minimal
+END
+mavlink.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/3017/trunk/libraries/GCS_MAVLink/include/minimal/mavlink.h
+END
+minimal.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/3017/trunk/libraries/GCS_MAVLink/include/minimal/minimal.h
+END
+mavlink_msg_heartbeat.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/3017/trunk/libraries/GCS_MAVLink/include/minimal/mavlink_msg_heartbeat.h
+END
