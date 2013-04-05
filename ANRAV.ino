@@ -1,16 +1,22 @@
 // Includes
 include "ANRAV.h"
-// Defines
 
 // Globals
-// Interrupt for incoming Serial data:
-int InterruptPin = 13;
-volatile int state = LOW;
-
 
 void ManualOverride()
 {
-  // Function for Sarah to check if we should go into Manual Operation.
+
+  /* 
+  Functions needed:
+  h - print all available commands
+  s [name] [parameter] - sets a parameter
+  g [name] - displays a parameter
+  n - navigation mode allows for steering the vessel via the cmd line.
+
+  ...
+  */
+
+
 }
 
 // Initialize Vessel Subsystems, etc.
@@ -23,17 +29,22 @@ void setup()
 	// Initialize the serial port.
 	Serial.begin(9600);
 	Serial.println("Welcome to ANRAV, SeaVoyager I");
+	/* Todo. I would like to get the current GPS date printed.
 	char *datestring = getDateTime();
 	Serial.println(datestring);
+	*/
 	Wire.begin(); // Start the I2C interface.
 
 	// Setup Rudder
+	Rudder.attach(rudderpin);	
+	
+	// Setup Motor
+	pinMode(motorpin, OUTPUT);   // Sets up the motor pin as PWM.
 
 	// PID Stuff
-	Input 	 = getCurrentBearing();
-	Setpoint = 90; // 90 degrees (center the rudder)
-
-	// Turn the PID on
+	int Input 	 = getCurrentBearing();
+	char Setpoint = 90; // 90 degrees (center the rudder)
+	// Turn PID Controller ON
 	myPID.SetMode(AUTOMATIC);
 
 	// 0 System has failures, 1 System is ready.
@@ -49,7 +60,7 @@ void setup()
 
 void loop()
 {
-	// Startup Meta-Rules
+	// Start-up Meta-Rules
 
 	// Navigation
 	if( goalReached() == 1 ){
@@ -58,26 +69,18 @@ void loop()
 	}else{
 		// Steer towards goal
 		Input = getCurrentBearing();
-
-		if(gap < 45)
-		{  //we're close to setpoint, use conservative tuning parameters
+		if(gap < 45){
+			// If SeaVoyager is has to compensate with a small angle.
     		myPID.SetTunings(consKp, consKi, consKd);
-  		}
-	    else
-   		{
-    		//we're far from setpoint, use aggressive tuning parameters
+  		}else{
+			// If SeaVoyager is has to compensate with a large angle.
      		myPID.SetTunings(aggKp, aggKi, aggKd);
      	}
   }
-
-
-	}
-
-
 	// Communication
 
-}
 
+}
 
 
 
