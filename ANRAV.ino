@@ -69,13 +69,16 @@ void loop()
 	}else{
 		// Steer towards goal
 		Input = getCurrentBearing();
-		if(gap < 45){
+     	Setpoint = calcDestBearing();
+     	gap = calcGap(Input,Setpoint);
+		if(gap < 20){
 			// If SeaVoyager is has to compensate with a small angle.
     		myPID.SetTunings(consKp, consKi, consKd);
   		}else{
 			// If SeaVoyager is has to compensate with a large angle.
      		myPID.SetTunings(aggKp, aggKi, aggKd);
      	}
+     myPID.Compute();
   }
 	// Communication
 
