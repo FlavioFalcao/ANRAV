@@ -14,6 +14,7 @@
 #include <HMC5883L.h>
 #include <Waypoints.h>
 #include <PID_v1.h>
+#include <shell.h>
 
 #define NULL null //for Arduino to understand both types of NULL
 

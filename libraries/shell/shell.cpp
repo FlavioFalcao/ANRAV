@@ -19,6 +19,108 @@
   test string: hscp98863sci123scd13256sap1934sai5927sad125850sr985sw12345678N085231234W
   */
 
+void help()
+{
+  Serial.println("help");
+}
+void set_consKp(long newval)
+{
+  consKp = newval / 1000;
+  Serial.print("consKp = ");
+  Serial.println(consKp);
+}
+void set_consKi(long newval)
+{
+  consKi = newval / 1000;
+  Serial.print("consKi = ");
+  Serial.println(consKi);
+}
+void set_consKd(long newval)
+{
+  consKd = newval / 1000;
+  Serial.print("consKd = ");
+  Serial.println(consKd);
+}
+void set_aggKp(long newval)
+{
+  aggKp = newval / 1000;
+  Serial.print("aggKp = ");
+  Serial.println(aggKp);
+}
+void set_aggKi(long newval)
+{
+  aggKi = newval / 1000;
+  Serial.print("aggKi = ");
+  Serial.println(aggKi);
+}
+void set_aggKd(long newval)
+{
+  aggKd = newval / 1000;
+  Serial.print("aggKd = ");
+  Serial.println(aggKd);
+}
+void set_rudder(long newval)
+{
+  Serial.println("set_rudder");
+  Serial.println(newval);
+}
+void set_waypoint(long latitude, long longitude, char cardinalNS, char cardinalEW)
+{
+  Serial.println("set_waypoint");
+  Serial.println(latitude);
+  Serial.println(longitude);
+  Serial.println(cardinalNS);
+  Serial.println(cardinalEW);
+}
+void increaseSpeed()
+{
+  Serial.println("increaseSpeed");
+}
+void decreaseSpeed()
+{
+  Serial.println("decreaseSpeed");
+}
+void goLeft()
+{
+  Serial.println("goLeft");
+}
+void goRight()
+{
+  Serial.println("goRight");
+}
+void get_consKp()
+{
+  Serial.println("get_consKp");
+}
+void get_consKi()
+{
+  Serial.println("get_consKi");
+}
+void get_consKd()
+{
+  Serial.println("get_consKd");
+}
+void get_aggKp()
+{
+  Serial.println("get_aggKp");
+}
+void get_aggKi()
+{
+  Serial.println("get_aggKi");
+}
+void get_aggKd()
+{
+  Serial.println("get_aggKd");
+}
+void get_rudder()
+{
+  Serial.println("get_rudder");
+}
+void get_waypoint()
+{
+  Serial.println("get_waypoint");
+}
+
 char getByte()
 {
 	while (!Serial.available());

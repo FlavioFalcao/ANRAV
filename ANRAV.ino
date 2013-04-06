@@ -37,19 +37,6 @@ void ManualOverride()
   //switch to manual control...does a PID controller need to know this?
   return 0;
 
-  switch(manualCommand[0])
-  {
-  	case 'q': //exit manual override
-
-  		break;
-  	case 'h': //print help via wireless
-  		//how do print via Xbee?
-  		break;
-  	case 's':
-  		break;
-
-  }
-
 }
 
 // Initialize Vessel Subsystems, etc.
