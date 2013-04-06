@@ -5,6 +5,8 @@
 #include <Waypoints.h>
 #include <PID_v1.h>
 
+#define NULL null //for Arduino to understand both types of NULL
+
 // Set up some system constants:
 //I2C on the Pro is 4 (SDA) and 5 (SCL).
 static const char I2C_SDA  = 4;
