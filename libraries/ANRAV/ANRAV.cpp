@@ -21,7 +21,10 @@ int getShortAngle(int a1, int a2){
 	return angle;
 }
 // Navigation
-void loadWayPoints(){
+void storeWayPoint(){
+
+}
+void loadWayPoint(){
 
 }
 int  getCurrentBearing(){

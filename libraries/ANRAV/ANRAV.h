@@ -53,7 +53,8 @@ void sendtoBase(char *stringy);
 char *getDateTime();
 
 // Navigation
-void loadWayPoints();
+void loadWayPoint();
+void storeWayPoint();
 int  getCurrentBearing();
 int  calcDestBearing();
 int  calcDestDistance();
