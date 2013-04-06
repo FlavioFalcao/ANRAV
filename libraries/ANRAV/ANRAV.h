@@ -1,3 +1,13 @@
+/*
+  ANRAV.h - Library with misc ANRAV code.
+  Created by Markus A. R. Kreitzer Apr 5, 2013
+  Released under GPL licensing.
+*/
+
+#ifndef ANRAV_h 
+#define ANRAV_h
+
+#include "Arduino.h"
 #include <Servo.h> 
 #include <AP_GPS.h>
 #include <Wire.h>
@@ -5,9 +15,13 @@
 #include <Waypoints.h>
 #include <PID_v1.h>
 
+<<<<<<< HEAD
 #define NULL null //for Arduino to understand both types of NULL
 
 // Set up some system constants:
+=======
+// CONSTANTS
+>>>>>>> a769b3baabf1793c45238cd4024ab0effcfdbccf
 //I2C on the Pro is 4 (SDA) and 5 (SCL).
 static const char I2C_SDA  = 4;
 static const char I2C_SCL  = 5;
@@ -26,43 +40,57 @@ static const char temppin2 = 12;
 static const char temppin3 = 13;
 
 // Propulsion and Steering
-const char rudder_angle = 90;
-const char motor_speed  = 50;
+const unsigned char rudder_angle = 90;
+const unsigned char motor_speed  = 50;
 
+
+// GLOBAL VARIABLES!
 // Interrupts
 const char InterruptPin = 13;
 volatile int state = LOW;
 
+// Navigation
+int goal_thres = 10; // 10 meters
+
+// FUNCTION PROTOTYPES
 // Basic
 boolean systemStatus();
 void sendtoBase(char *stringy);
 char *getDateTime();
 
 // Navigation
-void loadWayPoints();
-int getCurrentBearing();
+void loadWayPoint();
+void storeWayPoint();
+int  getCurrentBearing();
 int  calcDestBearing();
 int  calcDestDistance();
 int  calcSetPoint();
-int calcGap();
-boolean goalReached();
+int  calcGap();
+int  getShortAngle(int a1, int a2);
+bool goalReached();
+
 // Controls
 Servo Rudder;  // create servo object to control a servo 
-void setMotor(char motor_speed){
-	analogWrite(motorpin, motor_speed);
-}
-void circlePattern(){
-	Rudder.write(45);
-	delay(15); // waits for the servo to get there 
-	setMotor(25);
-}
+void setMotor(char motor_speed);
+void circlePattern();
+char convertRudder();
 
 // PID variables
 double Setpoint, Input, Output;
 
-//Define the aggressive and conservative Tuning Parameters
-double aggKp=4, aggKi=0.2, aggKd=1;
-double consKp=1, consKi=0.05, consKd=0.25;
+//Define the aggressive and conservative Default Tuning Parameters
+// Aggresive
+double aggKp=4;
+double aggKi=0.2;
+double aggKd=1;
 
+// Conservative
+double consKp=1;
+double consKi=0.05;
+double consKd=0.25;
+
+// OBJECT INSTANTIATION. 
 //Specify the links and initial tuning parameters
-PID myPID(&Input, &Output, &Setpoint,2,5,1, DIRECT);
+PID myPID(&Input, &Output, &Setpoint,consKp,consKi,consKd, DIRECT);
+
+#endif
