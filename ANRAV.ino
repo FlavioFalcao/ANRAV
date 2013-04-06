@@ -12,11 +12,10 @@ void ManualOverride()
   s [name] [parameter] - sets a parameter
   g [name] - displays a parameter
   n - navigation mode allows for steering the vessel via the cmd line.
-
+  e - exit
   ...
+
   */
-
-
 }
 
 // Initialize Vessel Subsystems, etc.
@@ -63,31 +62,28 @@ void loop()
 	// Start-up Meta-Rules
 
 	// Navigation
-	if( goalReached() == 1 ){
+	if( goalReached() == 0 ){
 		// Circle
 		circlePattern();
 	}else{
 		// Steer towards goal
 		Input = getCurrentBearing();
      	Setpoint = calcDestBearing();
-     	gap = calcGap(Input,Setpoint);
+     	gap = getShortAngle((int) Input,(int) Setpoint);
 		if(gap < 20){
-			// If SeaVoyager is has to compensate with a small angle.
+			// If vessel has to compensate with a small angle.
     		myPID.SetTunings(consKp, consKi, consKd);
   		}else{
-			// If SeaVoyager is has to compensate with a large angle.
+			// If vessel is has to compensate with a large angle.
      		myPID.SetTunings(aggKp, aggKi, aggKd);
      	}
      myPID.Compute();
+     Rudder.write(convertRudder(Output));
   }
 	// Communication
 
 
 }
-
-
-
-
 
 
 
