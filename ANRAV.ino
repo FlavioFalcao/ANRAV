@@ -1,21 +1,30 @@
+/*
+  ANRAV.ino - Main ANRAV Arduino Sketch
+  Created by:
+  Markus A. R. Kreitzer,
+  Kyle V. Owen
+  Patrick D. Berry
+  on Apr 5, 2013
+  Released under GPL licensing.
+*/
+
 // Includes
 include "ANRAV.h"
 
-// Globals
-
+// Interrupt Service Routine which triggers when Xbee receives data.
 void ManualOverride()
 {
-
-  /* 
-  Functions needed:
-  h - print all available commands
-  s [name] [parameter] - sets a parameter
-  g [name] - displays a parameter
-  n - navigation mode allows for steering the vessel via the cmd line.
-  e - exit
-  ...
-
+	// Kyle's baby now!
+	/* 
+	Functions needed:
+	h - print all available commands
+	s [name] [parameter] - sets a parameter
+	g [name] - displays a parameter
+	n - navigation mode allows for steering the vessel via the cmd line.
+	e - exit
+	...
   */
+  return 0;
 }
 
 // Initialize Vessel Subsystems, etc.

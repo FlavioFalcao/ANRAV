@@ -86,7 +86,4 @@ double consKd=0.25;
 //Specify the links and initial tuning parameters
 PID myPID(&Input, &Output, &Setpoint,consKp,consKi,consKd, DIRECT);
 
-
-
-
 #endif
