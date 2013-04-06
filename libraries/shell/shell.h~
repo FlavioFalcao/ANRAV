@@ -1,0 +1,6 @@
+static const int MAX_COMMAND_LENGTH = 80;
+
+char getByte();
+long getLong();
+void manualLoop();
+void set_consKp();
