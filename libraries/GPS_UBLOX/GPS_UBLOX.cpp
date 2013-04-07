@@ -34,7 +34,6 @@
 */
 
 #include "GPS_UBLOX.h"
-
 #include <avr/interrupt.h>
 #include "Arduino.h"
 
@@ -57,9 +56,11 @@ void GPS_UBLOX_Class::Init(void)
 	GPS_timer = millis();	 // Restarting timer...
 	// Initialize serial port
 	#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-		Serial1.begin(38400);				 // Serial port 1 on ATMega1280/2560
+		Serial3.begin(9600);				 // Serial port 1 on ATMega1280/2560
+		Serial.println("Serial 3 selected");
 	#else
-		Serial.begin(38400);
+		Serial.begin(9600);
+		Serial.println("Serial Selected");
 	#endif
 }
 
@@ -73,15 +74,17 @@ void GPS_UBLOX_Class::Read(void)
 	int numc;
 	
 	#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)		// If AtMega1280/2560 then Serial port 1...
-	numc = Serial1.available();
+	numc = Serial3.available();
 	#else
 	numc = Serial.available();
 	#endif
+	Serial.print("We got numc:");
+	Serial.println(numc);
 	if (numc > 0)
 		for (int i = 0; i < numc; i++)	// Process bytes received
 			{
 		#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-			data = Serial1.read();
+			data = Serial3.read();
 		#else
 			data = Serial.read();
 		#endif

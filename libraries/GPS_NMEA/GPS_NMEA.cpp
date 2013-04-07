@@ -60,9 +60,9 @@ void GPS_NMEA_Class::Init(void)
 	PrintErrors=0;	
 	// Initialize serial port
 	#if defined(__AVR_ATmega1280__)|| defined(__AVR_ATmega2560__)
-		Serial1.begin(38400);         // Serial port 1 on ATMega1280/2560
+		Serial3.begin(9600);         // Serial port 1 on ATMega1280/2560
 	#else
-		Serial.begin(38400);
+		Serial.begin(9600);
 	#endif
 }
 
@@ -77,14 +77,14 @@ void GPS_NMEA_Class::Read(void)
  
   
   #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)    // If AtMega1280/2560 then Serial port 1...
-	numc = Serial1.available();    
+	numc = Serial3.available();    
   #else
 	numc = Serial.available();
   #endif
   if (numc > 0)
     for (i=0;i<numc;i++){
       #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)    // If AtMega1280/2560 then Serial port 1...
-	  c = Serial1.read();   
+	  c = Serial3.read();   
       #else
 	  c = Serial.read();
       #endif

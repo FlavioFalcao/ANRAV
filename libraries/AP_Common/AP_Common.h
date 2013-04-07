@@ -16,7 +16,7 @@
 #define _AP_COMMON_H
 
 // Get the common arduino functions
-#include "wiring.h"
+#include "Arduino.h"
 // ... and remove some of their stupid macros
 #undef round
 #undef abs
