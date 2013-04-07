@@ -8,18 +8,15 @@
 #define ANRAV_h
 
 #include "Arduino.h"
-#include "Servo.h"
-#include "AP_GPS.h"
-#include "Wire.h"
-#include "HMC5883L.h"
+#include <Servo.h>
+#include <HMC5883L.h>
 // #include "Waypoints.h"
-#include "PID_v1.h"
-#include "SHELL.h"
+#include <PID_v1.h>
+#include <SHELL.h>
 
 // #define NULL null //for Arduino to understand both types of NULL
 
 // Set up some system constants:
-=======
 // CONSTANTS
 //I2C on the Pro is 4 (SDA) and 5 (SCL).
 static const char I2C_SDA  = 4;

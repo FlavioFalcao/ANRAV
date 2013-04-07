@@ -1,5 +1,11 @@
-#include "ANRAV.h"
+/*
+  ANRAV.cpp - Library of functions needed for ANRAV.
+  Created by Markus A.R. Kreitzer, April 7, 2013.
+  Released under GPL.
+*/
 
+#include "Arduino.h"
+#include "ANRAV.h"
 // Puts the boat into circle mode around the destination.
 void circlePattern(){
 	Rudder.write(45);

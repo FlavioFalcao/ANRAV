@@ -231,23 +231,7 @@
 			"file": "libraries/ANRAV/ANRAV.h",
 			"settings":
 			{
-				"buffer_size": 1979,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "ANRAV.ino",
-			"settings":
-			{
-				"buffer_size": 2656,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "libraries/ANRAV/ANRAV.cpp",
-			"settings":
-			{
-				"buffer_size": 3111,
+				"buffer_size": 1957,
 				"line_ending": "Unix"
 			}
 		}
@@ -255,7 +239,7 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 267.0,
 		"selected_items":
 		[
 			[
@@ -356,10 +340,12 @@
 	},
 	"file_history":
 	[
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV/ANRAV.cpp",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV/ANRAV.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/ANRAV.ino",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_PID/AP_PID.h",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/Notes.md",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/Compass/Compass.ino",
-		"/Users/markuskreitzer/code_n_scripts/ANRAV/ANRAV.ino",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV.h",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/mainANRAV/mainANRAV.ino",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/mainANRAV/ANRAV.h",
@@ -423,7 +409,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
 		]
@@ -552,7 +538,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -560,15 +546,15 @@
 					"file": "libraries/ANRAV/ANRAV.h",
 					"settings":
 					{
-						"buffer_size": 1979,
+						"buffer_size": 1957,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1979,
-								1979
+								183,
+								183
 							]
 						],
 						"settings":
@@ -576,68 +562,7 @@
 							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 146.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "ANRAV.ino",
-					"settings":
-					{
-						"buffer_size": 2656,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								182,
-								182
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Stino-master/Arduino.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 2,
-					"file": "libraries/ANRAV/ANRAV.cpp",
-					"settings":
-					{
-						"buffer_size": 3111,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3062,
-								3062
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Stino-master/Arduino.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 2.0,
-						"translation.y": 602.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -662,18 +587,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":
