@@ -13,8 +13,6 @@
 #include <SHELL.h>
 #include <Servo.h>
 
-// #define NULL null //for Arduino to understand both types of NULL
-
 // Set up some system constants:
 // CONSTANTS
 //I2C on the Pro is 4 (SDA) and 5 (SCL).
