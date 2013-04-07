@@ -35,7 +35,7 @@ static const char temppin3 = 13;
 // Propulsion and Steering
 unsigned char rudder_angle = 90;
 unsigned char motor_speed  = 50;
-
+int           gap          = 0;
 
 // GLOBAL VARIABLES!
 // Interrupts
