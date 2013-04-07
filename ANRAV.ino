@@ -47,10 +47,6 @@ void ManualOverride()
 // Initialize Vessel Subsystems, etc.
 void setup()
 {  
-	// The following instructions interrupts the micro when new data comes in.
-	pinMode(InterruptPin, OUTPUT);
-	attachInterrupt(0, ManualOverride, CHANGE);
-
 	// Initialize the serial port.
 	Serial.begin(9600);
 	Serial.println("Welcome to ANRAV, SeaVoyager I");
@@ -86,7 +82,10 @@ void setup()
 void loop()
 {
 	// Start-up Meta-Rules
-
+	if (Serial1.available())
+	{
+		manualLoop();
+	}
 	// Navigation
 	if( goalReached() == 0 ){
 		// Circle
