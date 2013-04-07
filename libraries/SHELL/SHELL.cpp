@@ -21,110 +21,135 @@
 
 void help()
 {
-  Serial.println("help");
+  Serial1.println("help");
 }
 void set_consKp(long newval)
 {
   consKp = newval / 1000;
-  Serial.print("consKp = ");
-  Serial.println(consKp);
+  Serial1.print("consKp = ");
+  Serial1.println(consKp);
 }
 void set_consKi(long newval)
 {
   consKi = newval / 1000;
-  Serial.print("consKi = ");
-  Serial.println(consKi);
+  Serial1.print("consKi = ");
+  Serial1.println(consKi);
 }
 void set_consKd(long newval)
 {
   consKd = newval / 1000;
-  Serial.print("consKd = ");
-  Serial.println(consKd);
+  Serial1.print("consKd = ");
+  Serial1.println(consKd);
 }
 void set_aggKp(long newval)
 {
   aggKp = newval / 1000;
-  Serial.print("aggKp = ");
-  Serial.println(aggKp);
+  Serial1.print("aggKp = ");
+  Serial1.println(aggKp);
 }
 void set_aggKi(long newval)
 {
   aggKi = newval / 1000;
-  Serial.print("aggKi = ");
-  Serial.println(aggKi);
+  Serial1.print("aggKi = ");
+  Serial1.println(aggKi);
 }
 void set_aggKd(long newval)
 {
   aggKd = newval / 1000;
-  Serial.print("aggKd = ");
-  Serial.println(aggKd);
+  Serial1.print("aggKd = ");
+  Serial1.println(aggKd);
 }
 void set_rudder(long newval)
 {
-  Serial.println("set_rudder");
-  Serial.println(newval);
+  Rudder.write((char) newval);
+  Serial1.print("rudder = ");
+  Serial1.println(Rudder.read());
 }
 void set_waypoint(long latitude, long longitude, char cardinalNS, char cardinalEW)
 {
-  Serial.println("set_waypoint");
-  Serial.println(latitude);
-  Serial.println(longitude);
-  Serial.println(cardinalNS);
-  Serial.println(cardinalEW);
+  Serial1.println("set_waypoint");
+  Serial1.println(latitude);
+  Serial1.println(longitude);
+  Serial1.println(cardinalNS);
+  Serial1.println(cardinalEW);
 }
 void increaseSpeed()
 {
-  Serial.println("increaseSpeed");
+  if (motor_speed != 255)
+  {
+    motor_speed++;
+    setMotor(motor_speed);
+  }
+  Serial1.print("motor_speed = ");
+  Serial1.println(motor_speed);
 }
 void decreaseSpeed()
 {
-  Serial.println("decreaseSpeed");
+  if (motor_speed != 0)
+  {
+    motor_speed--;
+    setMotor(motor_speed);
+  }
+  Serial1.print("motor_speed = ");
+  Serial1.println(motor_speed);
 }
 void goLeft()
 {
-  Serial.println("goLeft");
+  if (rudder_angle != 0)
+  {
+  	ruder_angle--;
+  	Rudder.write(rudder_angle);
+  }
+  Serial1.print("rudder = ");
+  Serial1.println(Rudder.read());  	
 }
 void goRight()
 {
-  Serial.println("goRight");
+  if (rudder_angle != 180)
+  {
+  	ruder_angle++;
+  	Rudder.write(rudder_angle);
+  }
+  Serial1.print("rudder = ");
+  Serial1.println(Rudder.read());  	
 }
 void get_consKp()
 {
-  Serial.println("get_consKp");
+  Serial1.println("get_consKp");
 }
 void get_consKi()
 {
-  Serial.println("get_consKi");
+  Serial1.println("get_consKi");
 }
 void get_consKd()
 {
-  Serial.println("get_consKd");
+  Serial1.println("get_consKd");
 }
 void get_aggKp()
 {
-  Serial.println("get_aggKp");
+  Serial1.println("get_aggKp");
 }
 void get_aggKi()
 {
-  Serial.println("get_aggKi");
+  Serial1.println("get_aggKi");
 }
 void get_aggKd()
 {
-  Serial.println("get_aggKd");
+  Serial1.println("get_aggKd");
 }
 void get_rudder()
 {
-  Serial.println("get_rudder");
+  Serial1.println("get_rudder");
 }
 void get_waypoint()
 {
-  Serial.println("get_waypoint");
+  Serial1.println("get_waypoint");
 }
 
 char getByte()
 {
-	while (!Serial.available());
-	return Serial.read();
+	while (!Serial1.available());
+	return Serial1.read();
 }
 
 long getLong()
@@ -133,19 +158,19 @@ long getLong()
   char negate = 1;
   unsigned char byteRead;
   boolean stillDigit = true;
-  while (!Serial.available());
-  if (Serial.peek() == '-')
+  while (!Serial1.available());
+  if (Serial1.peek() == '-')
   {
-    Serial.read();
+    Serial1.read();
     negate = -1;
   }
   while (stillDigit)
   {
-    while (!Serial.available());
-    byteRead = Serial.peek();
+    while (!Serial1.available());
+    byteRead = Serial1.peek();
     if (isdigit(byteRead))
     {
-      Serial.read();
+      Serial1.read();
       constructedLong *= 10;
       constructedLong += (byteRead - '0');
     }

@@ -1,4 +1,4 @@
-static const int MAX_COMMAND_LENGTH = 80;
+#include "ANRAV.h"
 
 char getByte();
 long getLong();
