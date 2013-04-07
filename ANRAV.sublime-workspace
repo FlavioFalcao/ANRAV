@@ -231,7 +231,7 @@
 			"file": "libraries/ANRAV/ANRAV.h",
 			"settings":
 			{
-				"buffer_size": 1957,
+				"buffer_size": 1867,
 				"line_ending": "Unix"
 			}
 		}
@@ -239,9 +239,13 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 267.0,
+		"height": 167.0,
 		"selected_items":
 		[
+			[
+				":ard",
+				"Preferences: Show Arduino Menu"
+			],
 			[
 				":w",
 				":w - Save"
@@ -253,10 +257,6 @@
 			[
 				":",
 				":0 - BOF"
-			],
-			[
-				":ard",
-				"Set Syntax: Arduino"
 			],
 			[
 				":q",
@@ -340,9 +340,9 @@
 	},
 	"file_history":
 	[
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/ANRAV.ino",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV/ANRAV.cpp",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV/ANRAV.h",
-		"/Users/markuskreitzer/code_n_scripts/ANRAV/ANRAV.ino",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_PID/AP_PID.h",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/Notes.md",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/Compass/Compass.ino",
@@ -409,7 +409,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 93.0,
+		"height": 0.0,
 		"where_history":
 		[
 		]
@@ -546,15 +546,15 @@
 					"file": "libraries/ANRAV/ANRAV.h",
 					"settings":
 					{
-						"buffer_size": 1957,
+						"buffer_size": 1867,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								183,
-								183
+								180,
+								180
 							]
 						],
 						"settings":
@@ -562,7 +562,7 @@
 							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 485.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

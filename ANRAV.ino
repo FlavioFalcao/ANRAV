@@ -9,6 +9,11 @@
 */
 
 // Includes
+#include <Wire.h>
+#include <HMC5883L.h>
+#include <PID_v1.h>
+#include <SHELL.h>
+#include <Servo.h>
 #include "ANRAV.h"
 
 // Interrupt Service Routine which triggers when Xbee receives data.
