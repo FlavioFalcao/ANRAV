@@ -6,13 +6,12 @@
 
 #ifndef ANRAV_h 
 #define ANRAV_h
-
 #include "Arduino.h"
-#include <Servo.h>
+#include <Wire.h>
 #include <HMC5883L.h>
-// #include "Waypoints.h"
 #include <PID_v1.h>
 #include <SHELL.h>
+#include <Servo.h>
 
 // #define NULL null //for Arduino to understand both types of NULL
 
@@ -36,8 +35,8 @@ static const char temppin2 = 12;
 static const char temppin3 = 13;
 
 // Propulsion and Steering
-const unsigned char rudder_angle = 90;
-const unsigned char motor_speed  = 50;
+unsigned char rudder_angle = 90;
+unsigned char motor_speed  = 50;
 
 
 // GLOBAL VARIABLES!
