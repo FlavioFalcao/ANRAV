@@ -10,7 +10,6 @@
 #include <Wire.h>
 #include <HMC5883L.h>
 #include <PID_v1.h>
-#include <SHELL.h>
 #include <Servo.h>
 
 // Set up some system constants:
@@ -42,8 +41,23 @@ int           gap          = 0;
 const char InterruptPin = 13;
 volatile int state = LOW;
 
+// PID variables
+double Setpoint, Input, Output;
+
+//Define the aggressive and conservative Default Tuning Parameters
+// Aggresive
+double aggKp=4;
+double aggKi=0.2;
+double aggKd=1;
+
+// Conservative
+double consKp=1;
+double consKi=0.05;
+double consKd=0.25;
+
 // Navigation
 int goal_thres = 10; // 10 meters
+HMC5883L compass;
 
 // FUNCTION PROTOTYPES
 // Basic
@@ -68,19 +82,6 @@ void setMotor(char motor_speed);
 void circlePattern();
 char convertRudder();
 
-// PID variables
-double Setpoint, Input, Output;
-
-//Define the aggressive and conservative Default Tuning Parameters
-// Aggresive
-double aggKp=4;
-double aggKi=0.2;
-double aggKd=1;
-
-// Conservative
-double consKp=1;
-double consKi=0.05;
-double consKd=0.25;
 
 // OBJECT INSTANTIATION. 
 //Specify the links and initial tuning parameters

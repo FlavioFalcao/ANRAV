@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"list",
+				"listofNW"
+			],
+			[
+				"send",
+				"sendWayPoints"
+			],
+			[
 				"hea",
 				"headingDegrees"
 			],
@@ -227,25 +235,13 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "libraries/ANRAV/ANRAV.h",
-			"settings":
-			{
-				"buffer_size": 1867,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 167.0,
+		"height": 307.0,
 		"selected_items":
 		[
-			[
-				":ard",
-				"Preferences: Show Arduino Menu"
-			],
 			[
 				":w",
 				":w - Save"
@@ -253,6 +249,10 @@
 			[
 				":0",
 				":0 - BOF"
+			],
+			[
+				":ard",
+				"Set Syntax: Arduino"
 			],
 			[
 				":",
@@ -323,7 +323,7 @@
 				"Build: Build"
 			]
 		],
-		"width": 404.0
+		"width": 392.0
 	},
 	"console":
 	{
@@ -340,9 +340,13 @@
 	},
 	"file_history":
 	[
-		"/Users/markuskreitzer/code_n_scripts/ANRAV/ANRAV.ino",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/SHELL/SHELL.cpp",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV/ANRAV.cpp",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV/ANRAV.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/GUI_Stuff/ANRAV_Easy.py",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/SHELL/SHELL.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/ANRAV.ino",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/GUI_Stuff/ANRAV_Console.py",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_PID/AP_PID.h",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/Notes.md",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/Compass/Compass.ino",
@@ -419,6 +423,9 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"mychoices",
+			"ruder",
+			"gap",
 			"shinfo",
 			"warFilePaths = [ '/mnt/vler_share/projects/bhie-vler/branches/vler-1bii/UDDI-Lookup/target/*.war',\n 				 '/mnt/vler_share/projects/bhie-vler/branches/vler-1bii/DocumentViewer/target/*.war',\n				 '/mnt/vler_share/projects/bhie-vler/branches/vler-1bii/ArchiveVersionApp/target/*.war',\n				 '/mnt/vler_share/projects/bhie-vler/branches/vler-1bii/MRAS/target/*.war',\n				 '/mnt/vler_share/projects/bhie-vler/branches/vler-1bii/bhie-nhin/dod-gateway/AdapterServices/target/*.war'\n ]",
 			"vler_build",
@@ -506,6 +513,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"components",
+			"rudder",
 			"info",
 			"vler_share",
 			"extract_hostname",
@@ -538,35 +547,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "libraries/ANRAV/ANRAV.h",
-					"settings":
-					{
-						"buffer_size": 1867,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								180,
-								180
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 485.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],

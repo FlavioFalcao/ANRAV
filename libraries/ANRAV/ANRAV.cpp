@@ -35,6 +35,7 @@ void loadWayPoint(){
 
 }
 int setupCompass(){
+	int error = 0;
 	// Initialize the serial port.
 	// Serial.begin(9600);
 
@@ -47,13 +48,20 @@ int setupCompass(){
 	// Serial.println("Setting scale to +/- 1.3 Ga");
 	error = compass.SetScale(1.3); // Set the scale of the compass.
 
-	if(error != 0) // If there is an error, print it out.
-	Serial.println(compass.GetErrorText(error));
+	if(error != 0){
+		// If there is an error, print it out.
+		Serial.println(compass.GetErrorText(error));
+		return 1;
+	}
  
 	// Serial.println("Setting measurement mode to continous.");
 	error = compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
-	if(error != 0) // If there is an error, print it out.
-	Serial.println(compass.GetErrorText(error));
+	if(error != 0){
+		// If there is an error, print it out.
+		Serial.println(compass.GetErrorText(error));
+		return 1;
+	} 
+	return 0;
 }
 
 int  getCurrentBearing(){
@@ -97,20 +105,20 @@ int  getCurrentBearing(){
 }
 
 int  calcDestBearing(){
-
+	return 0;
 }
 int  calcDestDistance(){
-
+	return 0;
 }
 int  calcSetPoint(){
-
+	return 0;
 }
 
 // Returns 0 if goal is reached, 1 if not there yet.
 bool goalReached(){
-
+	return true;
 
 }
 char convertRudder(){
-
+	return 0;
 }

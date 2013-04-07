@@ -3,7 +3,6 @@
   Created by:
   Markus A. R. Kreitzer,
   Kyle V. Owen
-  Patrick D. Berry
   on Apr 5, 2013
   Released under GPL licensing.
 */
@@ -12,9 +11,9 @@
 #include <Wire.h>
 #include <HMC5883L.h>
 #include <PID_v1.h>
-#include <SHELL.h>
 #include <Servo.h>
-#include "ANRAV.h"
+#include <ANRAV.h>
+#include <SHELL.h>
 
 // Initialize Vessel Subsystems, etc.
 void setup()
@@ -57,8 +56,8 @@ void loop()
 	// Start-up Meta-Rules
 	if (Serial1.available())
 	{
-		manualLoop();
-	}
+
+	}/*
 	// Navigation
 	if( goalReached() == 0 ){
 		// Circle
@@ -79,7 +78,7 @@ void loop()
      Rudder.write(convertRudder(Output));
   }
 	// Communication
-
+*/
 
 }
 

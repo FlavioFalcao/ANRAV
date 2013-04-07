@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "SHELL.h"
 
   /* 
   Functions needed:
@@ -97,7 +97,7 @@ void goLeft()
 {
   if (rudder_angle != 0)
   {
-  	ruder_angle--;
+  	rudder_angle--;
   	Rudder.write(rudder_angle);
   }
   Serial1.print("rudder = ");
@@ -107,7 +107,7 @@ void goRight()
 {
   if (rudder_angle != 180)
   {
-  	ruder_angle++;
+  	rudder_angle++;
   	Rudder.write(rudder_angle);
   }
   Serial1.print("rudder = ");
@@ -195,6 +195,7 @@ void manualLoop()
 				//print help
 				break;
 			case 'n': //nav mode
+			{
 				boolean navMode = true;
 				while (navMode)
 				{
@@ -218,8 +219,10 @@ void manualLoop()
 							break;
 					}
 				}
+			}
 				break;
 			case 's': //set
+			{
 				byteRead = getByte();
 				switch (byteRead)
 				{
@@ -270,7 +273,10 @@ void manualLoop()
 					default:
 						break;
 				}
+			}
+				break;
 			case 'g': //get
+			{
 				byteRead = getByte();
 				switch (byteRead)
 				{
@@ -315,6 +321,8 @@ void manualLoop()
 					default:
 						break;
 				}
+			}
+				break;
 			case 'q': //quit
 				quit = true;
 				break;
