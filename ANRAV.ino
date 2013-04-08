@@ -49,7 +49,7 @@ void setup(){
 void loop()
 {
   // Start-up Meta-Rules
-  if (Serial1.available())
+  if (Serial.available())
   {
 
   }/*
