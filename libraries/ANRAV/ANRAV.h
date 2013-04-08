@@ -3,15 +3,14 @@
   Created by Markus A. R. Kreitzer Apr 5, 2013
   Released under GPL licensing.
 */
+//#include <Servo.h>
 
 #ifndef ANRAV_h 
 #define ANRAV_h
 #include "Arduino.h"
-#include <Wire.h>
 #include <HMC5883L.h>
-#include <PID_v1.h>
-#include <Servo.h>
-
+#include <Servo.h>  
+  
 // Set up some system constants:
 // CONSTANTS
 //I2C on the Pro is 4 (SDA) and 5 (SCL).
@@ -57,7 +56,7 @@ double consKd=0.25;
 
 // Navigation
 int goal_thres = 10; // 10 meters
-HMC5883L compass;
+//HMC5883L compass;
 
 // FUNCTION PROTOTYPES
 // Basic
@@ -82,9 +81,8 @@ void setMotor(char motor_speed);
 void circlePattern();
 char convertRudder();
 
-
 // OBJECT INSTANTIATION. 
 //Specify the links and initial tuning parameters
-PID myPID(&Input, &Output, &Setpoint,consKp,consKi,consKd, DIRECT);
+//PID myPID(&Input, &Output, &Setpoint,consKp,consKi,consKd, DIRECT);
 
 #endif

@@ -7,6 +7,7 @@
 #include "Arduino.h"
 #include "ANRAV.h"
 // Puts the boat into circle mode around the destination.
+Servo Rudder;  // create servo object to control a servo 
 void circlePattern(){
 	Rudder.write(45);
 	delay(15); // waits for the servo to get there 
