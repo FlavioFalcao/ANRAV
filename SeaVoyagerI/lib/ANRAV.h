@@ -8,6 +8,7 @@
 #define ANRAV_h
 
 #include "Arduino.h"
+#include "PID_v1.h"
 #include "HMC5883L.h"
 #include "GPS_NMEA.h"
 
