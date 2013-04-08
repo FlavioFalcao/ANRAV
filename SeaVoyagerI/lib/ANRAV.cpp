@@ -120,6 +120,6 @@ bool goalReached(){
 	return true;
 
 }
-char convertRudder(){
+char convertRudder(int PIDError){
 	return 0;
 }

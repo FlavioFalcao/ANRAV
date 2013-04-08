@@ -8,9 +8,10 @@
 #define ANRAV_h
 
 #include "Arduino.h"
-#include "PID_v1.h"
-#include "HMC5883L.h"
 #include "GPS_NMEA.h"
+#include "HMC5883L.h"
+#include "PID_v1.h"
+#include "SHELL.h"
 
 // Set up some system constants:
 // CONSTANTS
@@ -80,7 +81,7 @@ bool goalReached();
 Servo Rudder;  // create servo object to control a servo 
 void setMotor(char motor_speed);
 void circlePattern();
-char convertRudder();
+char convertRudder(int PIDError);
 
 // OBJECT INSTANTIATION. 
 //Specify the links and initial tuning parameters
