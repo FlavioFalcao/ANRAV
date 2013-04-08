@@ -7,8 +7,7 @@
 #ifndef ANRAV_h 
 #define ANRAV_h
 #include "Arduino.h"
-#include <Servo.h>  
-#include <HMC5883L.h>
+#include "HMC5883L.h"
   
 // Set up some system constants:
 // CONSTANTS

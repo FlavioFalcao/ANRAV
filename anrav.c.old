@@ -1,0 +1,13 @@
+#include <Arduino.h>
+#include <Servo.h>
+const char motorpin = 9;
+const char rudderpin = 10;
+void Setup(){
+	// Blah
+	Servo Rudder;
+	Ruder.Attach(rudderpin);
+}
+
+void Loop(){
+
+}

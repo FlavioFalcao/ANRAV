@@ -1,5 +1,3 @@
-#include "ANRAV.h"
-
 char getByte();
 long getLong();
 void manualLoop();

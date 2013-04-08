@@ -8,10 +8,10 @@
  */
 
 // Includes
-#include "Arduino.h"
-#include <ANRAV.h>
-#include <SHELL.h>
-
+//#include "Arduino.h"
+//#include <ANRAV.h>
+//#include <SHELL.h>
+#include <Servo.h>
 // Initialize Vessel Subsystems, etc.
 void setup(){  
   // Initialize the serial port.
@@ -23,6 +23,7 @@ void setup(){
    	*/
 
   // Setup Rudder
+  Servo Rudder
   Rudder.attach(rudderpin);	
 
   // Setup Motor
@@ -30,7 +31,7 @@ void setup(){
 
   // PID Stuff
   //int Input 	 = getCurrentBearing();
-  char Setpoint = 90; // 90 degrees (center the rudder)
+  //char Setpoint = 90; // 90 degrees (center the rudder)
   // Turn PID Controller ON
   //myPID.SetMode(AUTOMATIC);
 
