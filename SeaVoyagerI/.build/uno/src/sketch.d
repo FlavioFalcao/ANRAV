@@ -11,5 +11,4 @@
   /Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/variants/standard/pins_arduino.h \
   /Applications/Arduino.app/Contents/Resources/Java/libraries/Servo/Servo.h \
   /Applications/Arduino.app/Contents/Resources/Java/libraries/Wire/Wire.h \
-  /Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/Stream.h \
-  src/../lib/ANRAV.h src/../lib/HMC5883L.h
+  /Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/Stream.h
