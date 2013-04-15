@@ -3,14 +3,14 @@
   Created by Markus A. R. Kreitzer Apr 5, 2013
   Released under GPL licensing.
 */
-//#include <Servo.h>
 
 #ifndef ANRAV_h 
 #define ANRAV_h
+
 #include "Arduino.h"
-//#include <HMC5883L.h>
-//#include <Servo.h>  
-  
+#include "HMC5883L.h"
+#include "GPS_NMEA.h"
+
 // Set up some system constants:
 // CONSTANTS
 //I2C on the Pro is 4 (SDA) and 5 (SCL).
@@ -83,6 +83,6 @@ char convertRudder();
 
 // OBJECT INSTANTIATION. 
 //Specify the links and initial tuning parameters
-//PID myPID(&Input, &Output, &Setpoint,consKp,consKi,consKd, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
 
 #endif
