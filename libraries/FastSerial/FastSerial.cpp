@@ -193,13 +193,14 @@ void FastSerial::flush(void)
 	// the value to _txBuffer->head.
 	_txBuffer->tail = _rxBuffer->head;
 }
-
-void FastSerial::write(uint8_t c)
+// Following lines were fixed per http://diydrones.com/forum/topics/compiling-arduimu-sketch-with-arduino-1-0-3
+//void FastSerial::write(uint8_t c)
+size_t FastSerial::write(uint8_t c)
 {
 	uint16_t i;
 
 	if (!_open) // drop bytes if not open
-		return;
+		return 0;
 
 	// wait for room in the tx buffer
 	i = (_txBuffer->head + 1) & _txBuffer->mask;
@@ -212,6 +213,7 @@ void FastSerial::write(uint8_t c)
 
 	// enable the data-ready interrupt, as it may be off if the buffer is empty
 	*_ucsrb |= _portTxBits;
+	return i;
 }
 
 // Buffer management ///////////////////////////////////////////////////////////

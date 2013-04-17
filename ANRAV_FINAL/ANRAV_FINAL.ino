@@ -4,8 +4,9 @@
 #include <EEPROM.h>
 #include <HMC5883L.h>
 #include <PID_v1.h>
-#include <GPS_NMEA.h>
+//#include <GPS_NMEA.h>
 #include <Waypoints.h>
+#include <GPS.h>
 #include <Navigation.h>
 
 /*

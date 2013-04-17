@@ -114,7 +114,9 @@ public:
 	virtual int read(void);
 	virtual int peek(void);
 	virtual void flush(void);
-	virtual void write(uint8_t c);
+	// Took this line out per http://diydrones.com/forum/topics/compiling-arduimu-sketch-with-arduino-1-0-3
+	//virtual void write(uint8_t c);
+	virtual size_t write(uint8_t c);
 	using BetterStream::write;
 	//@}
 

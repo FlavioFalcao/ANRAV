@@ -55,13 +55,13 @@ read_register(int address, byte *value)
   *value = 0;
 
   Wire.beginTransmission(COMPASS_ADDRESS);
-  Wire.send(address);     //sends address to read from
+  Wire.write(address);     //sends address to read from
   if (0 != Wire.endTransmission())
 	 return false;
 
   Wire.requestFrom(COMPASS_ADDRESS, 1);    // request 1 byte from device
   if( Wire.available() ) {
-      *value = Wire.receive();  // receive one byte
+      *value = Wire.read();  // receive one byte
 	  ret = true;
   }
   if (0 != Wire.endTransmission())
@@ -75,8 +75,8 @@ static bool
 write_register(int address, byte value)
 {
   Wire.beginTransmission(COMPASS_ADDRESS);
-  Wire.send(address);
-  Wire.send(value);
+  Wire.write(address);
+  Wire.write(value);
   if (0 != Wire.endTransmission())
 	 return false;
   delay(10);
@@ -100,13 +100,13 @@ bool AP_Compass_HMC5843::read_raw()
    byte buff[6];
 
    Wire.beginTransmission(COMPASS_ADDRESS);
-   Wire.send(0x03);        //sends address to read from
+   Wire.write(0x03);        //sends address to read from
    if (0 != Wire.endTransmission())
 	  return false;
 
    Wire.requestFrom(COMPASS_ADDRESS, 6);    // request 6 bytes from device
    while (Wire.available()) {
-	  buff[i] = Wire.receive();  // receive one byte
+	  buff[i] = Wire.read();  // receive one byte
 	  i++;
    }
 

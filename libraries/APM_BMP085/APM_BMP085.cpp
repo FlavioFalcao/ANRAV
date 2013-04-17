@@ -67,14 +67,14 @@ void APM_BMP085_Class::Init(int initialiseWireLib)
 
   // We read the calibration data registers
 	Wire.beginTransmission(BMP085_ADDRESS);
-	Wire.send(0xAA);
+	Wire.write(0xAA);
 	Wire.endTransmission();
 
 	Wire.requestFrom(BMP085_ADDRESS, 22);
 
   //Wire.endTransmission();
 	while(Wire.available()){
-		buff[i] = Wire.receive();	// receive one byte
+		buff[i] = Wire.read();	// receive one byte
 		i++;
 	}
 
@@ -136,8 +136,8 @@ uint8_t APM_BMP085_Class::Read()
 void APM_BMP085_Class::Command_ReadPress()
 {
 	Wire.beginTransmission(BMP085_ADDRESS);
-	Wire.send(0xF4);
-	Wire.send(0x34+(oss << 6));	// write_register(0xF4, 0x34+(oversampling_setting << 6));
+	Wire.write(0xF4);
+	Wire.write(0x34+(oss << 6));	// write_register(0xF4, 0x34+(oversampling_setting << 6));
 	Wire.endTransmission();
 }
 
@@ -149,7 +149,7 @@ void APM_BMP085_Class::ReadPress()
 	byte xlsb;
 
 	Wire.beginTransmission(BMP085_ADDRESS);
-	Wire.send(0xF6);
+	Wire.write(0xF6);
 	Wire.endTransmission();
 
 	Wire.requestFrom(BMP085_ADDRESS, 3); // read a byte
@@ -158,19 +158,19 @@ void APM_BMP085_Class::ReadPress()
     // waiting
 	}
 
-	msb = Wire.receive();
+	msb = Wire.read();
 
 	while(!Wire.available()) {
     // waiting
 	}
 
-	lsb = Wire.receive();
+	lsb = Wire.read();
 
 	while(!Wire.available()) {
     // waiting
 	}
 
-	xlsb = Wire.receive();
+	xlsb = Wire.read();
 	RawPress = (((long)msb << 16) | ((long)lsb << 8) | ((long)xlsb)) >> (8 - oss);
 
 	if(_offset_press == 0){
@@ -201,8 +201,8 @@ void APM_BMP085_Class::ReadPress()
 void APM_BMP085_Class::Command_ReadTemp()
 {
 	Wire.beginTransmission(BMP085_ADDRESS);
-	Wire.send(0xF4);
-	Wire.send(0x2E);
+	Wire.write(0xF4);
+	Wire.write(0x2E);
 	Wire.endTransmission();
 }
 
@@ -211,17 +211,17 @@ void APM_BMP085_Class::ReadTemp()
 {
 	byte tmp;
 	Wire.beginTransmission(BMP085_ADDRESS);
-	Wire.send(0xF6);
+	Wire.write(0xF6);
 	Wire.endTransmission();
 
 	Wire.beginTransmission(BMP085_ADDRESS);
 	Wire.requestFrom(BMP085_ADDRESS,2);
 
 	while(!Wire.available());	// wait
-	RawTemp = Wire.receive();
+	RawTemp = Wire.read();
 
 	while(!Wire.available());	// wait
-	tmp 	= Wire.receive();
+	tmp 	= Wire.read();
 
 	RawTemp = RawTemp << 8 | tmp;
 
