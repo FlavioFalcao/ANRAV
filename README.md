@@ -8,13 +8,10 @@ Need to put all long STRINGS into PROGRMEM (program memory) instead of RAM. Trus
 
 
 Markus Notes
-The following is the order in which to include stuff.
-ANRAV.h
-	-> Servo.h
-	-> HMC...h
-	-> GPS_NMEA.h
-	-> Navigation.h
-SHELL.h
 
-
-ANRAV.c
+To get all this working, you have to:
+1) Have the latest Arduino IDE installed.
+2) Clone the ANRAV repository to your computer.
+3) Remove the existing Arduino libraries folder from your "~/Documents/Arduino/libraries" path. 
+   NB: This path varies between OS.
+4) Symlink  the ANRAV libraries folder to the Arduino User libraries folder.
