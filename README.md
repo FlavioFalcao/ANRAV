@@ -10,6 +10,7 @@ Need to put all long STRINGS into PROGRMEM (program memory) instead of RAM. Trus
 Markus Notes
 
 To get all this working, you have to:
+
 1) Have the latest Arduino IDE installed.
 
 2) Clone the ANRAV repository to your computer.
