@@ -39,14 +39,9 @@ unsigned char rudder_angle = 90;
 unsigned char motor_speed  = 50;
 int           gap          = 0;
 
-// Radiation sensing
-static const char geigerpin = 2; // interrupt 0
-volatile unsigned long counts = 0; // total counts
-unsigned long start_time = 0; // start time for measurements in seconds
-
 // GLOBAL VARIABLES!
 // Interrupts
-const char InterruptPin = 13; // Interrupt pin needs to be 2, 3, 21, 20, 19, 18 (2 is Geiger)
+const char InterruptPin = 13;
 volatile int state = LOW;
 
 // PID variables
@@ -213,30 +208,9 @@ char convertRudder(){
 	return 0;
 }
 
-void rad_event()
-{
-  counts++;
-}
-
-void intializeCount() // zero out counts and set start_time to seconds since power on or reset
-{
-  counts = 0;
-  start_time = millis() / 1000; // start time in seconds
-}
-
-float getRate() // return current rate in counts per second and zero out measurments
-{
-  float rate = (float) counts / ((millis() / 1000) - start_time); // counts per second
-  intializeCount();
-  return rate;
-}
-  
-
 
 void setup() {                
-  // Something
-  attachInterrupt(0, rad_event, RISING); // attach interrupt for Geiger counter
-  initializeCount(); 
+  // Nothing
 }
 
 void loop() {
