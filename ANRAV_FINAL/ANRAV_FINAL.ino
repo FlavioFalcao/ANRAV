@@ -147,42 +147,55 @@ int getShortAngle(int a1, int a2){
 
 int setupCompass(){
   int error = 0;
-
-  // Serial1.println("Starting the I2C interface.");
   Wire.begin(); // Start the I2C interface.
-
-  // Serial1.println("Constructing new HMC5883L");
   compass = HMC5883L(); // Construct a new HMC5883 compass.
-
-  // Serial1.println("Setting scale to +/- 1.3 Ga");
   error = compass.SetScale(1.3); // Set the scale of the compass.
-
   if(error != 0){
     // If there is an error, print it out.
     Serial1.println(compass.GetErrorText(error));
     return 1;
   }
-
-  // Serial1.println("Setting measurement mode to continous.");
   error = compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
   if(error != 0){
-    // If there is an error, print it out.
     Serial1.println(compass.GetErrorText(error));
     return 1;
   } 
-  return 0;
+return 0;
 }
 
-float  getCurrentBearing(){
-  // Retrive the raw values from the compass (not scaled).
+float getCurrentBearing(){
   MagnetometerRaw raw = compass.ReadRawAxis();
-  // Retrived the scaled values from the compass (scaled to the configured scale).
   MagnetometerScaled scaled = compass.ReadScaledAxis();
-
-  // Values are accessed like so:
-  int MilliGauss_OnThe_XAxis = scaled.XAxis;// (or YAxis, or ZAxis)
-
+  float xHeading = atan2(scaled.YAxis, scaled.XAxis);
+  float yHeading = atan2(scaled.ZAxis, scaled.XAxis);
+  float zHeading = atan2(scaled.ZAxis, scaled.YAxis);
+  if(xHeading < 0)    xHeading += 2*PI;
+  if(xHeading > 2*PI)    xHeading -= 2*PI;
+  if(yHeading < 0)    yHeading += 2*PI;
+  if(yHeading > 2*PI)    yHeading -= 2*PI;
+  if(zHeading < 0)    zHeading += 2*PI;
+  if(zHeading > 2*PI)    zHeading -= 2*PI;
+  float xDegrees = xHeading * 180/M_PI; 
+  float yDegrees = yHeading * 180/M_PI; 
+  float zDegrees = zHeading * 180/M_PI; 
+  //Serial.print(xDegrees,DEC);
+  //Serial.print(",");
+  //Serial.print(yDegrees,DEC);
+  //Serial.print(",");
+  //Serial.print(zDegrees,DEC);
+  //Serial.println(";");  
+  //delay(100);
+  return yDegrees;
+}
+float  getCurrentBearing_broke(){
+  MagnetometerRaw raw = compass.ReadRawAxis();
+  MagnetometerScaled scaled = compass.ReadScaledAxis();
+  //int32_t MilliGauss_OnThe_XAxis = scaled.XAxis;// (or YAxis, or ZAxis)
   // Calculate heading when the magnetometer is level, then correct for signs of axis.
+  Serial1.print("scaled Y: ");
+  Serial1.println(scaled.YAxis);
+  Serial1.print("scaled X: ");
+  Serial1.println(scaled.XAxis);
   float heading = atan2(scaled.YAxis, scaled.XAxis);
 
   // Once you have your heading, you must then add your 'Declination Angle', which is the 'Error' of the magnetic field in your location.
@@ -205,12 +218,13 @@ float  getCurrentBearing(){
 
   // Output the data via the serial port.
   //Output(raw, scaled, heading, headingDegrees);
+  //delay(66);
   return headingDegrees;
   // Normally we would delay the application by 66ms to allow the loop
   // to run at 15Hz (default bandwidth for the HMC5883L).
   // However since we have a long serial out (104ms at 9600) we will let
   // it run at its natural speed.
-  // delay(66);
+  //delay(66);
 }
 
 int  calcDestBearing(){
@@ -433,7 +447,11 @@ void setup() {
   Serial.begin(9600);   // USB
   Serial1.begin(9600);  // Xbee
   Serial2.begin(9600);  // GPS
-  setupCompass();
+  //setupCompass();
+  Wire.begin();
+  compass = HMC5883L();
+  compass.SetScale(1.3);
+  compass.SetMeasurementMode(Measurement_Continuous);
   Serial.println("Welcome to ANRAV, SeaVoyager I");
   Serial1.println("Welcome to ANRAV, SeaVoyager I");
   Rudder.attach(rudderpin);
@@ -474,7 +492,7 @@ void setup() {
   Serial1.print("Current Index After nav: ");
   Serial1.println(wp.get_index());
 }
-
+float radrate = 0;
 void loop()
 {
   if( Serial.available())
@@ -484,8 +502,9 @@ void loop()
   }
   if (millis() - start_time > measurement_interval)
   {
-    Serial1.print("Counts per minute: ");
-    Serial1.println(getRate());
+    //Serial1.print("Counts per minute: ");
+    radrate = getRate();
+    //Serial1.println(radrate);
   }
   gps.Read();
   if (gps.NewData)  // New GPS data?
@@ -515,49 +534,56 @@ void loop()
     Serial.print(" Speed:");
     Serial.print(gps.Ground_Speed/100.0);
     Serial.print(" Course:");
-    Serial.print(gps.Ground_Course/100.0);
+    Serial.println(gps.Ground_Course/100.0);
     Serial.print(" Compass Heading: ");
     Serial.println(getCurrentBearing());
     //
     //Goes to Xbee
-    Serial1.println("GPS Debug Data:");
-    Serial1.print("Number of Sattelites: ");
-    Serial1.println(gps.NumSats);
-    Serial1.print("GPS Signal Quality:");
-    Serial1.println(gps.Quality);
-    Serial1.print(" Time:");
-    Serial1.print(gps.Time);
-    Serial1.print(" Fix:");
-    Serial1.print((int)gps.Fix);
-    Serial1.print(" Lat:");
+//    Serial1.println("GPS Debug Data:");
+//    Serial1.print("Number of Sattelites: ");
+//    Serial1.println(gps.NumSats);
+//    Serial1.print("GPS Signal Quality:");
+//    Serial1.println(gps.Quality);
+//    Serial1.print(" Time:");
+//    Serial1.print(gps.Time);
+//    Serial1.print(" Fix:");
+//    Serial1.print((int)gps.Fix);
+//    Serial1.print(" Lat:");
+//    Serial1.print(gps.Lattitude);
+//    Serial1.print(" Lon:");
+//    Serial1.print(gps.Longitude);
+//    Serial1.print(" Alt:");
+//    Serial1.print(gps.Altitude/1000.0);
+//    Serial1.print(" Speed:");
+//    Serial1.print(gps.Ground_Speed/100.0);
+//    Serial1.print(" Course:");
+//    Serial1.println(gps.Ground_Course/100.0);
+//    Serial1.print(" Compass Heading: ");
+//    Serial1.println(getCurrentBearing());
+//    Serial1.println();
+//    //
+//    Serial.println("Next Destination:");
+//    Serial1.println("Next Destination:");
+//    printwaypoint( &(nav.next_wp) );
+//    Serial.print("Distance = ");
+//    Serial.println(distance_gps,DEC);  
+//    Serial.print(" Bearing = ");
+//    Serial.println(bearing_gps, DEC);
+//    Serial.println();
+//    Serial.println("\n\n\n");
+//    //
+//    Serial1.print("Distance = ");
+//    Serial1.println(distance_gps,DEC);  
+//    Serial1.print(" Bearing = ");
+//    Serial1.println(bearing_gps, DEC);
+//    Serial1.println("\n\n\n");
+    // For Sarah
+    Serial1.print("RADIATION,");
+    Serial1.print(radrate);
+    Serial1.print(",");
     Serial1.print(gps.Lattitude);
-    Serial1.print(" Lon:");
-    Serial1.print(gps.Longitude);
-    Serial1.print(" Alt:");
-    Serial1.print(gps.Altitude/1000.0);
-    Serial1.print(" Speed:");
-    Serial1.print(gps.Ground_Speed/100.0);
-    Serial1.print(" Course:");
-    Serial1.print(gps.Ground_Course/100.0);
-    Serial1.print(" Compass Heading: ");
-    Serial1.println(getCurrentBearing());
-    Serial1.println();
-    //
-    Serial.println("Next Destination:");
-    Serial1.println("Next Destination:");
-    printwaypoint( &(nav.next_wp) );
-    Serial.print("Distance = ");
-    Serial.println(distance_gps,DEC);  
-    Serial.print(" Bearing = ");
-    Serial.println(bearing_gps, DEC);
-    Serial.println();
-    Serial.println("\n\n\n");
-    //
-    Serial1.print("Distance = ");
-    Serial1.println(distance_gps,DEC);  
-    Serial1.print(" Bearing = ");
-    Serial1.println(bearing_gps, DEC);
-    Serial1.println("\n\n\n");
+    Serial1.print(",");
+    Serial1.println(gps.Longitude);
     gps.NewData = 0;
     delay(1000);
   }
