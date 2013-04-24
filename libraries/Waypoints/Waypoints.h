@@ -20,7 +20,6 @@ class Waypoints
 	
 	WP			get_waypoint_with_index(uint8_t i);
 	WP			get_current_waypoint(void);
-
 	void 		set_waypoint_with_index(Waypoints::WP wp, uint8_t i);
 
 	void 		set_start_byte(uint16_t start_byte);
@@ -41,6 +40,7 @@ class Waypoints
 	uint8_t _index;
 	uint8_t _total;	
 };
+
 
 #endif
 

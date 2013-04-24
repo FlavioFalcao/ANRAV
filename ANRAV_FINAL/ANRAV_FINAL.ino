@@ -16,7 +16,7 @@
 #include <GPS_NMEA.h>
 #include <HMC5883L.h> // Compass
 
-
+// Instantiate all teh stuffs.
 Navigation nav;
 GPS_NMEA_Class gps;
 Waypoints wp;
@@ -93,7 +93,7 @@ char *getDateTime();
 // Navigation
 void loadWayPoint();
 void storeWayPoint();
-int  getCurrentBearing();
+float  getCurrentBearing();
 int  calcDestBearing();
 int  calcDestDistance();
 int  calcSetPoint();
@@ -110,6 +110,20 @@ char convertRudder();
 // OBJECT INSTANTIATION. 
 //Specify the links and initial tuning parameters
 //PID myPID(&Input, &Output, &Setpoint,consKp,consKi,consKd, DIRECT);
+
+void printwaypoint(Waypoints::WP *wp){
+  // USB
+  Serial.print("Lattitude: ");
+  Serial.print( (*wp).lat );
+  Serial.print("\t\nLongitude: ");
+  Serial.println( (*wp).lng );	
+  // Xbee
+  Serial1.print("Lattitude: ");
+  Serial1.print( (*wp).lat );
+  Serial1.print("\t\nLongitude: ");
+  Serial1.println( (*wp).lng );	
+}
+
 
 // Puts the boat into circle mode around the destination.
 void circlePattern(){
@@ -134,32 +148,32 @@ int getShortAngle(int a1, int a2){
 int setupCompass(){
   int error = 0;
 
-  // Serial.println("Starting the I2C interface.");
+  // Serial1.println("Starting the I2C interface.");
   Wire.begin(); // Start the I2C interface.
 
-  // Serial.println("Constructing new HMC5883L");
+  // Serial1.println("Constructing new HMC5883L");
   compass = HMC5883L(); // Construct a new HMC5883 compass.
 
-  // Serial.println("Setting scale to +/- 1.3 Ga");
+  // Serial1.println("Setting scale to +/- 1.3 Ga");
   error = compass.SetScale(1.3); // Set the scale of the compass.
 
   if(error != 0){
     // If there is an error, print it out.
-    Serial.println(compass.GetErrorText(error));
+    Serial1.println(compass.GetErrorText(error));
     return 1;
   }
 
-  // Serial.println("Setting measurement mode to continous.");
+  // Serial1.println("Setting measurement mode to continous.");
   error = compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
   if(error != 0){
     // If there is an error, print it out.
-    Serial.println(compass.GetErrorText(error));
+    Serial1.println(compass.GetErrorText(error));
     return 1;
   } 
   return 0;
 }
 
-int  getCurrentBearing(){
+float  getCurrentBearing(){
   // Retrive the raw values from the compass (not scaled).
   MagnetometerRaw raw = compass.ReadRawAxis();
   // Retrived the scaled values from the compass (scaled to the configured scale).
@@ -175,7 +189,7 @@ int  getCurrentBearing(){
   // Find yours here: http://www.magnetic-declination.com/
   // Mine is: 2 37' W, which is 2.617 Degrees, or (which we need) 0.0456752665 radians, I will use 0.0457
   // If you cannot find your Declination, comment out these two lines, your compass will be slightly off.
-  float declinationAngle = 0.06702;
+  float declinationAngle = 0.06702; // Auburn
   heading += declinationAngle;
 
   // Correct for when signs are reversed.
@@ -375,10 +389,11 @@ void manualLoop()
         switch (byteRead)
         {
         case 'w': //waypoint
-          Serial.print("Lattitude: ");
-          Serial.println(nav.next_wp.lat);
-          Serial.print("Longitude: ");
-          Serial.println(nav.next_wp.lng);
+          printwaypoint( &(nav.next_wp) );
+          Serial1.print("Lattitude: ");
+          Serial1.println(nav.next_wp.lat);
+          Serial1.print("Longitude: ");
+          Serial1.println(nav.next_wp.lng);
           break;
         default:
           break;
@@ -413,13 +428,12 @@ float getRate() // return current rate in counts per second and zero out measurm
 }
 
 
-
-
 void setup() {                
   // Nothing
   Serial.begin(9600);   // USB
   Serial1.begin(9600);  // Xbee
   Serial2.begin(9600);  // GPS
+  setupCompass();
   Serial.println("Welcome to ANRAV, SeaVoyager I");
   Serial1.println("Welcome to ANRAV, SeaVoyager I");
   Rudder.attach(rudderpin);
@@ -430,82 +444,145 @@ void setup() {
   // From Google Maps:
   // Magnolia (across Chick-Fil-A
   // 32.606373,-85.486306
-  Waypoints::WP Magnolia = {
-    0, 0, 32.606373 * T7, -85.486306 * T7, 5000            };
-  // Broun Hall
-  // 32.604901,-85.486373
-  Waypoints::WP Broun = {
-    0, 0, 32.604901 * T7, -85.486373 * T7, 5000            };
-
-
-
+  //  Waypoints::WP Magnolia = {
+  //    0, 0, 32.606373 * T7, -85.486306 * T7, 5000                                  };
+  //  // Broun Hall
+  //  // 32.604901,-85.486373
+  //  Waypoints::WP Broun = {
+  //    0, 0, 32.604901 * T7, -85.486373 * T7, 5000                                  };
+  Waypoints::WP Magnolia;
+  Magnolia.lat = 32.606373*T7;
+  Magnolia.lng = -85.486306 * T7;
+  Waypoints::WP Broun;
+  Broun.lat = 32.606373*T7;
+  Broun.lng = -85.486306 * T7;
+  //
   wp.set_total(3);
   wp.set_index(1);
-  Serial.print("Total: ");
-  Serial.println(wp.get_total());
-  //Serial.print("Current Index!: ");
-  //Serial.println(wp.get_index());
+  Serial1.print("Total: ");
+  Serial1.println(wp.get_total());
+  //Serial1.print("Current Index!: ");
+  //Serial1.println(wp.get_index());
   wp.set_waypoint_with_index(Broun,0);
   wp.set_waypoint_with_index(Magnolia,1);
 
   nav.set_wp(&wp);
   nav.load_home();
   nav.load_first_wp();
-  Serial.print("Total After nav: ");
-  Serial.println(wp.get_total());
-  Serial.print("Current Index After nav: ");
-  Serial.println(wp.get_index());
+  Serial1.print("Total After nav: ");
+  Serial1.println(wp.get_total());
+  Serial1.print("Current Index After nav: ");
+  Serial1.println(wp.get_index());
 }
 
 void loop()
 {
-  manualLoop();
+  if( Serial.available())
+  {
+    manualLoop();
+    Serial1.println("I've exited the manual loop and will restart in 1 second.");
+  }
   if (millis() - start_time > measurement_interval)
   {
     Serial1.print("Counts per minute: ");
     Serial1.println(getRate());
   }
-  Serial1.println("I've exited the manual loop and will restart in 1 second.");
   gps.Read();
   if (gps.NewData)  // New GPS data?
   {
-    if( gps.Fix != 0){
-      Serial.print("GPS:");
-      Serial.print(" Time:");
-      Serial.print(gps.Time);
-      Serial.print(" Fix:");
-      Serial.print((int)gps.Fix);
-      Serial.print(" Lat:");
-      Serial.print(gps.Lattitude);
-      Serial.print(" Lon:");
-      Serial.print(gps.Longitude);
-      Serial.print(" Alt:");
-      Serial.print(gps.Altitude/1000.0);
-      Serial.print(" Speed:");
-      Serial.print(gps.Ground_Speed/100.0);
-      Serial.print(" Course:");
-      Serial.print(gps.Ground_Course/100.0);
-      Serial.println();
-      gps.NewData = 0; // We have readed the data
-      nav.update_gps(gps.Altitude,gps.Longitude,gps.Lattitude,gps.Ground_Course);
-
-      long distance_gps = nav.distance;
-      long bearing_gps = nav.bearing;
-      Serial.print("Current Destination Index: ");
-      Serial.print(nav.get_current_wp_index());
-      Serial.print(",");
-      Serial.print(wp.get_index());
-      Serial.print("\n");
-      Serial.print("\tDistance = ");
-      Serial.print(distance_gps,DEC);  
-      Serial.print(" Bearing = ");
-      Serial.println(bearing_gps, DEC);
-      delay(20);
-
-    }
+    nav.update_gps(gps.Altitude,gps.Longitude,gps.Lattitude,gps.Ground_Course);
+    long distance_gps = nav.distance;
+    long bearing_gps = nav.bearing;
+    // Print Debug Info:
+    // Goes to USB
+    Serial.println("GPS Debug Data:");
+    Serial.print("Number of Sattelites: ");
+    Serial.println(gps.NumSats);
+    Serial.print("GPS Signal Quality:");
+    Serial.println(gps.Quality);
+    Serial.print("GPS Fix:");
+    Serial.println(gps.Fix);   
+    Serial.print(" Time:");
+    Serial.print(gps.Time);
+    Serial.print(" Fix:");
+    Serial.print((int)gps.Fix);
+    Serial.print(" Lat:");
+    Serial.print(gps.Lattitude);
+    Serial.print(" Lon:");
+    Serial.print(gps.Longitude);
+    Serial.print(" Alt:");
+    Serial.print(gps.Altitude/1000.0);
+    Serial.print(" Speed:");
+    Serial.print(gps.Ground_Speed/100.0);
+    Serial.print(" Course:");
+    Serial.print(gps.Ground_Course/100.0);
+    Serial.print(" Compass Heading: ");
+    Serial.println(getCurrentBearing());
+    //
+    //Goes to Xbee
+    Serial1.println("GPS Debug Data:");
+    Serial1.print("Number of Sattelites: ");
+    Serial1.println(gps.NumSats);
+    Serial1.print("GPS Signal Quality:");
+    Serial1.println(gps.Quality);
+    Serial1.print(" Time:");
+    Serial1.print(gps.Time);
+    Serial1.print(" Fix:");
+    Serial1.print((int)gps.Fix);
+    Serial1.print(" Lat:");
+    Serial1.print(gps.Lattitude);
+    Serial1.print(" Lon:");
+    Serial1.print(gps.Longitude);
+    Serial1.print(" Alt:");
+    Serial1.print(gps.Altitude/1000.0);
+    Serial1.print(" Speed:");
+    Serial1.print(gps.Ground_Speed/100.0);
+    Serial1.print(" Course:");
+    Serial1.print(gps.Ground_Course/100.0);
+    Serial1.print(" Compass Heading: ");
+    Serial1.println(getCurrentBearing());
+    Serial1.println();
+    //
+    Serial.println("Next Destination:");
+    Serial1.println("Next Destination:");
+    printwaypoint( &(nav.next_wp) );
+    Serial.print("Distance = ");
+    Serial.println(distance_gps,DEC);  
+    Serial.print(" Bearing = ");
+    Serial.println(bearing_gps, DEC);
+    Serial.println();
+    Serial.println("\n\n\n");
+    //
+    Serial1.print("Distance = ");
+    Serial1.println(distance_gps,DEC);  
+    Serial1.print(" Bearing = ");
+    Serial1.println(bearing_gps, DEC);
+    Serial1.println("\n\n\n");
+    gps.NewData = 0;
+    delay(1000);
   }
-
 }
+    //    if( gps.Fix != 0){
+    //      Serial.println("No GPS Fix.");
+    //      Serial1.println("No GPS Fix.");
+    //    }
+    // Navigation Code
+
+    //    Serial1.print("Current Destination Index: ");
+    //    Serial1.print(nav.get_current_wp_index());
+    //    Serial1.print(",");
+    //    Serial1.print(wp.get_index());
+    //    Serial1.print("\n");
+
+
+
+
+
+
+
+
+
+
 
 
 
