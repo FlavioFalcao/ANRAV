@@ -48,6 +48,7 @@ volatile unsigned long counts = 0; // total counts
 unsigned long start_time = 0; // start time for measurements in milliseconds
 unsigned int measurement_interval = 1000; // measurement interval in milliseconds
 volatile int state = LOW;
+float radrate = 0;
 
 // Propulsion and Steering
 static const char rudder_center = 45;
@@ -436,7 +437,7 @@ void intializeCount() // zero out counts and set start_time to seconds since pow
 
 float getRate() // return current rate in counts per second and zero out measurments
 {
-  float rate = (float) counts / (millis() - start_time) / 1000; // counts per second
+  float rate = (float) counts * 60 / ((float) (millis() - start_time) / 1000.0); // counts per second
   intializeCount();
   return rate;
 }
@@ -455,8 +456,6 @@ void setup() {
   Serial.println("Welcome to ANRAV, SeaVoyager I");
   Serial1.println("Welcome to ANRAV, SeaVoyager I");
   Rudder.attach(rudderpin);
-  attachInterrupt(0, rad_event, RISING); // attach interrupt for Geiger counter
-  intializeCount();	
   delay(1000);
 
   // From Google Maps:
@@ -491,14 +490,18 @@ void setup() {
   Serial1.println(wp.get_total());
   Serial1.print("Current Index After nav: ");
   Serial1.println(wp.get_index());
+  attachInterrupt(0, rad_event, RISING); // attach interrupt for Geiger counter
+  intializeCount();	
+
 }
-float radrate = 0;
+
+
 void loop()
 {
-  if( Serial.available())
+  if( Serial1.available())
   {
     manualLoop();
-    Serial1.println("I've exited the manual loop and will restart in 1 second.");
+    Serial1.println("Exited manual control.");
   }
   if (millis() - start_time > measurement_interval)
   {
