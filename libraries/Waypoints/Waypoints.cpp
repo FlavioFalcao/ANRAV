@@ -67,6 +67,8 @@ Waypoints::get_waypoint_with_index(uint8_t i)
 	mem += 4;
 	eeprom_busy_wait();
 	wp.lng = (long)eeprom_read_dword((uint32_t *)mem);
+
+	return wp;
 }
 
 
@@ -93,7 +95,7 @@ Waypoints::next_index(void)
 void
 Waypoints::set_index(uint8_t i)
 {
-	i = constrain(i, 0, _total);
+	_index = constrain(i, 0, _total);
 }
 
 uint8_t

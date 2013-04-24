@@ -1,5 +1,16 @@
 #include "Navigation.h"
+//#include <BetterStream.h>
+//#include <FastSerial.h>
+//#include <ftoa_engine.h>
+//#include <ntz.h>
+//#include <xtoa_fast.h>
 
+
+//this is a fancy way to initialize variables in C++
+//essentially the parentheses say...
+//a(b)  a=b
+
+/* old stuff!
 Navigation::Navigation(GPS *withGPS, Waypoints *withWP) : 
 		_gps(withGPS),
 		_wp(withWP),
@@ -41,56 +52,111 @@ Navigation::update_gps()
 		Serial.println(distance, DEC);
 	}
 }
+*/
 
-void
-Navigation::load_first_wp(void)
+//PATRICK WRITTEN STUFFFFFFF
+Navigation::Navigation()
 {
-	set_next_wp(_wp->get_waypoint_with_index(1));
+//	_gps = NULL;
+	_wp = NULL;
+	_hold_course = -1;
+}
+
+Navigation::Navigation(Waypoints *withWP)
+{
+//	_gps = NULL;
+	_wp = withWP;
+	_hold_course = -1;
 }
 
 void
-Navigation::load_home(void)
+Navigation::update_gps(int32_t altitude,int32_t longitude,int32_t latitude,int32_t ground_course)
 {
-	home = _wp->get_waypoint_with_index(0);
+	location.alt 		= altitude;//_gps->altitude;
+	location.lng 		= longitude;//_gps->longitude;
+	location.lat 		= latitude;//_gps->latitude;
+	
+	// target_bearing is where we should be heading 
+	bearing 			= get_bearing(&location, &next_wp);
+
+	// waypoint distance from plane
+	distance 			= get_distance(&location, &next_wp);
+	
+
+	/////////////
+	//JUST CALCULATE BEARING IN HERE INSTEAD OF CALLING A FUNCITON....
+	//Navigation::calc_bearing_error(void)
+	if(_hold_course == -1)
+	{
+		bearing_error = wrap_180(bearing - ground_course);
+	}
+	else
+	{
+		bearing_error = _hold_course;
+	}
+	//}
+
+	//calc_bearing_error();
+	////////
+
+	calc_altitude_error();
+	altitude_above_home = location.alt - home.alt;
+			
+	// check if we have missed the WP
+	_loiter_delta 		= (bearing - _old_bearing) / 100;
+	
+	// reset the old value
+	_old_bearing 		= bearing;
+	
+	// wrap values
+	if (_loiter_delta > 170) _loiter_delta -= 360;
+	if (_loiter_delta < -170) _loiter_delta += 360;
+	loiter_sum += abs(_loiter_delta);
+
+	if (distance <= 0){
+		distance = -1;
+		Serial.print("MSG wp error  ");
+		Serial.println(distance, DEC);
+	}
 }
 
-void
-Navigation::return_to_home_with_alt(uint32_t alt)
-{
-	Waypoints::WP loc = _wp->get_waypoint_with_index(0);
-	loc.alt += alt;
-	set_next_wp(loc);
-}
 
 void
-Navigation::reload_wp(void)
+Navigation::set_wp(Waypoints* withWP)
 {
-	set_next_wp(_wp->get_current_waypoint());
+	_wp = withWP;
 }
 
-void
-Navigation::load_wp_index(uint8_t i)
+uint8_t 
+Navigation::get_current_wp_index(void)
 {
-	_wp->set_index(i);
-	set_next_wp(_wp->get_current_waypoint());
+	return _wp->get_index();
 }
 
-void
-Navigation::hold_location()
-{
-  //	set_next_wp()	XXX needs to be implemented
-}
 
 void
-Navigation::set_home(Waypoints::WP loc)
+Navigation::set_next_wp(void)
 {
-	_wp->set_waypoint_with_index(loc, 0);
-	home 		= loc;
-	//location 	= home;
+	prev_wp = next_wp;
+	_wp->next_index();//increments the current waypoint index
+	next_wp = _wp->get_current_waypoint();
+
+	total_distance = get_distance(&location,&next_wp);
+	distance       = total_distance;
+
+	bearing        = get_bearing(&location,&next_wp);
+	_old_bearing   = bearing;
+
+	_loiter_delta  = 0;
+	loiter_sum     = 0;
+
+	reset_crosstrack();
+
 }
 
+//this is the previous version of set_next_wp
 void
-Navigation::set_next_wp(Waypoints::WP loc)
+Navigation::set_new_destination(Waypoints::WP loc)
 {
 	prev_wp = next_wp;
 	next_wp = loc;
@@ -111,6 +177,59 @@ Navigation::set_next_wp(Waypoints::WP loc)
 	// set a new crosstrack bearing
 	// ----------------------------
 	reset_crosstrack();
+}
+
+
+
+//END OF PATRICK WRITTEN STUFF
+///////////////////////////
+
+void
+Navigation::load_first_wp(void)
+{
+	_wp->set_index(1);
+	set_new_destination(_wp->get_current_waypoint());
+}
+
+void
+Navigation::load_home(void)
+{
+	home = _wp->get_waypoint_with_index(0);
+}
+
+void
+Navigation::return_to_home_with_alt(uint32_t alt)
+{
+	Waypoints::WP loc = _wp->get_waypoint_with_index(0);
+	loc.alt += alt;
+	set_new_destination(loc);
+}
+
+void
+Navigation::reload_wp(void)
+{
+	set_new_destination(_wp->get_current_waypoint());
+}
+
+void
+Navigation::load_wp_index(uint8_t i)
+{
+	_wp->set_index(i);
+	set_new_destination(_wp->get_current_waypoint());
+}
+
+void
+Navigation::hold_location()
+{
+  //	set_next_wp()	XXX needs to be implemented
+}
+
+void
+Navigation::set_home(Waypoints::WP loc)
+{
+	_wp->set_waypoint_with_index(loc, 0);
+	home 		= loc;
+	//location 	= home;
 }
 
 void 
@@ -143,16 +262,6 @@ Navigation::calc_distance_error()
 	//distance_estimate 	+= (float)_gps->ground_speed * .0002 * cos(radians(bearing_error * .01));
 	//distance_estimate 	-= DST_EST_GAIN * (float)(distance_estimate - GPS_distance);
 	//distance  		= max(distance_estimate,10);
-}
-
-void 
-Navigation::calc_bearing_error(void)
-{
-	if(_hold_course == -1){
-		bearing_error = wrap_180(bearing - _gps->ground_course);
-	}else{
-		bearing_error = _hold_course;
-	}
 }
 
 int32_t

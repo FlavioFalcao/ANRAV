@@ -1,30 +1,29 @@
-#include <AP_GPS.h>
-#include <AP_GPS_406.h>
-#include <AP_GPS_Auto.h>
-#include <AP_GPS_HIL.h>
-#include <AP_GPS_IMU.h>
-#include <AP_GPS_MTK.h>
-#include <AP_GPS_MTK16.h>
-#include <AP_GPS_MTK_Common.h>
-#include <AP_GPS_NMEA.h>
-#include <AP_GPS_None.h>
-#include <AP_GPS_Shim.h>
-#include <AP_GPS_SIRF.h>
-#include <AP_GPS_UBLOX.h>
-#include <GPS.h>
-#include <Navigation.h>
-#include <Wire.h>
-#include <Servo.h>
-#include <EEPROM.h>
-#include <HMC5883L.h>
-#include <PID_v1.h>
-#include <Waypoints.h>
-
 /*
-  ANRAV.ino - Library with misc ANRAV code.
+  ANRAV_FINAL.ino - Library with misc ANRAV code.
  Created by Markus A. R. Kreitzer Apr 5, 2013
+ with much thanks to Patrick Berry for teaching
+ C++.
  Released under GPL licensing.
  */
+
+// General libs needed
+#include <Wire.h>
+#include <Servo.h>
+
+// Nav, GPS, Compass
+#include <Waypoints.h>
+#include <Navigation.h>
+#include <GPS_NMEA.h>
+#include <HMC5883L.h> // Compass
+
+
+Navigation nav;
+GPS_NMEA_Class gps;
+Waypoints wp;
+HMC5883L compass;    // Instantiate the compass.
+
+//PID (seems like we wont need any PID)
+//#include <PID_v1.h>
 
 // Set up some system constants:
 // CONSTANTS
@@ -37,42 +36,53 @@ static const char current1pin = 6;
 static const char current2pin = 7;
 
 // Motors
-static const char motorpin = 9;
+static const char motorpin  = 9;
 static const char rudderpin = 10;
 
 // Temperature Sensors (Must be analog)
 static const char temppin1 = 11;
 static const char temppin2 = 12;
 static const char temppin3 = 13;
-
-// Propulsion and Steering
-unsigned char rudder_angle = 90;
-unsigned char motor_speed  = 50;
-int           gap          = 0;
-
-// GLOBAL VARIABLES!
-// Interrupts
-const char InterruptPin = 13;
+static const char geigerpin = 2;
+volatile unsigned long counts = 0; // total counts
+unsigned long start_time = 0; // start time for measurements in milliseconds
+unsigned int measurement_interval = 1000; // measurement interval in milliseconds
 volatile int state = LOW;
 
+// Propulsion and Steering
+static const char rudder_center = 45;
+static const char rudder_left   = 60;
+static const char rudder_right  = 30;
+unsigned char rudder_angle = rudder_center;
+
+// GLOBAL VARIABLES!
+// Propulsion and Steering
+static const char motor_speed_day_max   = 212;
+static const char motor_speed_night_max = 170;
+static const char motor_speed_min       = 0;
+unsigned char     motor_speed           = 50;
+static const char gap                   = 20;
+
+// Interrupts
+// const char InterruptPin = 13;
+// volatile int state = LOW;
+
 // PID variables
-double Setpoint, Input, Output;
+//double Setpoint, Input, Output;
 
 //Define the aggressive and conservative Default Tuning Parameters
 // Aggresive
-double aggKp=4;
-double aggKi=0.2;
-double aggKd=1;
+//double aggKp=4;
+//double aggKi=0.2;
+//double aggKd=1;
 
 // Conservative
-double consKp=1;
-double consKi=0.05;
-double consKd=0.25;
+//double consKp=1;
+//double consKi=0.05;
+//double consKd=0.25;
 
 // Navigation
 int goal_thres = 10; // 10 meters
-//HMC5883L compass;
-HMC5883L compass;
 
 // FUNCTION PROTOTYPES
 // Basic
@@ -99,14 +109,12 @@ char convertRudder();
 
 // OBJECT INSTANTIATION. 
 //Specify the links and initial tuning parameters
-PID myPID(&Input, &Output, &Setpoint,consKp,consKi,consKd, DIRECT);
-
+//PID myPID(&Input, &Output, &Setpoint,consKp,consKi,consKd, DIRECT);
 
 // Puts the boat into circle mode around the destination.
 void circlePattern(){
-  Rudder.write(45);
+  Rudder.write(rudder_left);
   delay(15); // waits for the servo to get there 
-  setMotor(25);
 }
 
 // Sets the PWM duty cycle.
@@ -123,20 +131,11 @@ int getShortAngle(int a1, int a2){
   return angle;
 }
 
-// Navigation
-void storeWayPoint(){
-
-}
-void loadWayPoint(){
-
-}
 int setupCompass(){
   int error = 0;
-  // Initialize the serial port.
-  // Serial.begin(9600);
 
   // Serial.println("Starting the I2C interface.");
-  // Wire.begin(); // Start the I2C interface.
+  Wire.begin(); // Start the I2C interface.
 
   // Serial.println("Constructing new HMC5883L");
   compass = HMC5883L(); // Construct a new HMC5883 compass.
@@ -201,38 +200,318 @@ int  getCurrentBearing(){
 }
 
 int  calcDestBearing(){
+  //
   return 0;
 }
 int  calcDestDistance(){
+  //
   return 0;
 }
+
 int  calcSetPoint(){
   return 0;
 }
 
-// Returns 0 if goal is reached, 1 if not there yet.
+// Returns true if goal is reached, false if not there yet.
 bool goalReached(){
-  return true;
-
+  if( nav.distance < goal_thres ){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 char convertRudder(){
   return 0;
 }
 
+char getByte()
+{
+  while (!Serial1.available());
+  return Serial1.read();
+}
+
+long getLong()
+{
+  long constructedLong = 0;
+  char negate = 1;
+  unsigned char byteRead;
+  boolean stillDigit = true;
+  while (!Serial1.available());
+  if (Serial1.peek() == '-')
+  {
+    Serial1.read();
+    negate = -1;
+  }
+  while (stillDigit)
+  {
+    while (!Serial1.available());
+    byteRead = Serial1.peek();
+    if (isdigit(byteRead))
+    {
+      Serial1.read();
+      constructedLong *= 10;
+      constructedLong += (byteRead - '0');
+    }
+    else
+    {
+      stillDigit = false;
+    }
+  }
+  return constructedLong * negate;
+}
+
+void increaseSpeed()
+{
+  if (motor_speed != 255)
+  {
+    motor_speed++;
+    setMotor(motor_speed);
+  }
+  Serial1.print("motor_speed = ");
+  Serial1.println(motor_speed);
+}
+void decreaseSpeed()
+{
+  if (motor_speed != 0)
+  {
+    motor_speed--;
+    setMotor(motor_speed);
+  }
+  Serial1.print("motor_speed = ");
+  Serial1.println(motor_speed);
+}
+void goLeft()
+{
+  if (rudder_angle != 0)
+  {
+    rudder_angle--;
+    Rudder.write(rudder_angle);
+  }
+  Serial1.print("rudder = ");
+  Serial1.println(Rudder.read());  	
+}
+void goRight()
+{
+  if (rudder_angle != 180)
+  {
+    rudder_angle++;
+    Rudder.write(rudder_angle);
+  }
+  Serial1.print("rudder = ");
+  Serial1.println(Rudder.read());  	
+}
+
+
+void manualLoop()
+{
+  unsigned char byteRead;
+  boolean quit = false;
+  while (!quit)
+  {
+    byteRead = getByte();
+    switch (byteRead)
+    {
+    case 'h': //help
+      //print help
+      break;
+    case 'n': //nav mode
+      {
+        boolean navMode = true;
+        while (navMode)
+        {
+          byteRead = getByte();
+          switch (byteRead)
+          {
+          case '+':
+            increaseSpeed();
+            break;
+          case '0':
+            setMotor(0);
+            break;
+          case 'f':
+            setMotor(255);
+            break; 
+          case '-':
+            decreaseSpeed();
+            break;
+          case 'l':
+            goLeft();
+            break;
+          case 'r':
+            goRight();
+            break;
+          case 'x': //exit nav mode
+            navMode = false;
+            break;
+          }
+        }
+      }
+      break;
+    case 's': //set
+      {
+        byteRead = getByte();
+        switch (byteRead)
+        {
+        case 'w': //waypoint
+          int32_t lattitude, longitude;
+          lattitude = getLong();
+          longitude = getLong();
+          //Waypoints::WP newWP = { 0, 0, latitude * T7, longitude * T7, 5000 };
+          Waypoints::WP newWP;
+          newWP.lng = longitude*T7;
+          newWP.lat = lattitude*T7;
+          nav.set_new_destination(newWP);
+          break;
+        default:
+          // Nothing
+          break;
+        }
+      }
+      break;
+    case 'g': //get
+      {
+        byteRead = getByte();
+        switch (byteRead)
+        {
+        case 'w': //waypoint
+          Serial.print("Lattitude: ");
+          Serial.println(nav.next_wp.lat);
+          Serial.print("Longitude: ");
+          Serial.println(nav.next_wp.lng);
+          break;
+        default:
+          break;
+        }
+      }
+      break;
+    case 'q': //quit
+      quit = true;
+      break;
+    default:
+      break;
+    }
+  }
+}
+
+void rad_event()
+{
+  counts++;
+}
+
+void intializeCount() // zero out counts and set start_time to seconds since power on or reset
+{
+  counts = 0;
+  start_time = millis(); // start time in millis
+}
+
+float getRate() // return current rate in counts per second and zero out measurments
+{
+  float rate = (float) counts / (millis() - start_time) / 1000; // counts per second
+  intializeCount();
+  return rate;
+}
+
+
+
 
 void setup() {                
   // Nothing
+  Serial.begin(9600);   // USB
+  Serial1.begin(9600);  // Xbee
+  Serial2.begin(9600);  // GPS
+  Serial.println("Welcome to ANRAV, SeaVoyager I");
+  Serial1.println("Welcome to ANRAV, SeaVoyager I");
+  Rudder.attach(rudderpin);
+  attachInterrupt(0, rad_event, RISING); // attach interrupt for Geiger counter
+  intializeCount();	
+  delay(1000);
+
+  // From Google Maps:
+  // Magnolia (across Chick-Fil-A
+  // 32.606373,-85.486306
+  Waypoints::WP Magnolia = {
+    0, 0, 32.606373 * T7, -85.486306 * T7, 5000            };
+  // Broun Hall
+  // 32.604901,-85.486373
+  Waypoints::WP Broun = {
+    0, 0, 32.604901 * T7, -85.486373 * T7, 5000            };
+
+
+
+  wp.set_total(3);
+  wp.set_index(1);
+  Serial.print("Total: ");
+  Serial.println(wp.get_total());
+  //Serial.print("Current Index!: ");
+  //Serial.println(wp.get_index());
+  wp.set_waypoint_with_index(Broun,0);
+  wp.set_waypoint_with_index(Magnolia,1);
+
+  nav.set_wp(&wp);
+  nav.load_home();
+  nav.load_first_wp();
+  Serial.print("Total After nav: ");
+  Serial.println(wp.get_total());
+  Serial.print("Current Index After nav: ");
+  Serial.println(wp.get_index());
 }
 
-void loop() {
-  // Nothing
-  Waypoints::WP	location_A = { 0, 0, 38.579633 * T7, -122.566265 * T7, 10000 };
-  Waypoints::WP	location_B = { 0, 0, 38.578743 * T7, -122.572782 * T7, 5000  };
-  long distance = nav.get_distance(&location_A, &location_B);
-  long bearing 	= nav.get_bearing(&location_A, &location_B);
-  Serial.print("\tDistance = ");
-  Serial.print(distance, DEC);	
-  Serial.print(" Bearing = ");
-  Serial.println(bearing, DEC);
+void loop()
+{
+  manualLoop();
+  if (millis() - start_time > measurement_interval)
+  {
+    Serial1.print("Counts per minute: ");
+    Serial1.println(getRate());
+  }
+  Serial1.println("I've exited the manual loop and will restart in 1 second.");
+  gps.Read();
+  if (gps.NewData)  // New GPS data?
+  {
+    if( gps.Fix != 0){
+      Serial.print("GPS:");
+      Serial.print(" Time:");
+      Serial.print(gps.Time);
+      Serial.print(" Fix:");
+      Serial.print((int)gps.Fix);
+      Serial.print(" Lat:");
+      Serial.print(gps.Lattitude);
+      Serial.print(" Lon:");
+      Serial.print(gps.Longitude);
+      Serial.print(" Alt:");
+      Serial.print(gps.Altitude/1000.0);
+      Serial.print(" Speed:");
+      Serial.print(gps.Ground_Speed/100.0);
+      Serial.print(" Course:");
+      Serial.print(gps.Ground_Course/100.0);
+      Serial.println();
+      gps.NewData = 0; // We have readed the data
+      nav.update_gps(gps.Altitude,gps.Longitude,gps.Lattitude,gps.Ground_Course);
+
+      long distance_gps = nav.distance;
+      long bearing_gps = nav.bearing;
+      Serial.print("Current Destination Index: ");
+      Serial.print(nav.get_current_wp_index());
+      Serial.print(",");
+      Serial.print(wp.get_index());
+      Serial.print("\n");
+      Serial.print("\tDistance = ");
+      Serial.print(distance_gps,DEC);  
+      Serial.print(" Bearing = ");
+      Serial.println(bearing_gps, DEC);
+      delay(20);
+
+    }
+  }
+
 }
+
+
+
+
+
+
+
+
 

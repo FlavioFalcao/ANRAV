@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"get_current",
+				"get_current_wp_index"
+			],
+			[
+				"get_in",
+				"get_bearing"
+			],
+			[
+				"mot",
+				"motor_speed_min"
+			],
+			[
+				"rud",
+				"rudder_left"
+			],
+			[
 				"list",
 				"listofNW"
 			],
@@ -236,45 +252,66 @@
 	"buffers":
 	[
 		{
-			"file": "SeaVoyagerI/lib/PID_v1.cpp",
+			"file": "libraries/AP_Navigation/Navigation.h",
 			"settings":
 			{
-				"buffer_size": 0,
+				"buffer_size": 3263,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "SeaVoyagerI/src/sketch.ino",
+			"file": "libraries/AP_Navigation/Navigation.cpp",
 			"settings":
 			{
-				"buffer_size": 0,
+				"buffer_size": 7638,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "libraries/ANRAV/ANRAV.h",
+			"file": "libraries/Compass_Module/HMC5883L.cpp",
 			"settings":
 			{
-				"buffer_size": 1892,
+				"buffer_size": 3136,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "",
-			"file": "/Users/markuskreitzer/Documents/Arduino/ANRAV_FINAL/ANRAV_FINAL.ino",
-			"file_size": -1,
-			"file_write_time": -1,
+			"file": "libraries/Compass_Module/HMC5883L.h",
 			"settings":
 			{
-				"buffer_size": 0,
+				"buffer_size": 1917,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "libraries/AP_GPS/AP_GPS.h",
+			"file": "libraries/GPS_NMEA/GPS_NMEA.cpp",
 			"settings":
 			{
-				"buffer_size": 526,
+				"buffer_size": 8518,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "libraries/GPS_NMEA/GPS_NMEA.h",
+			"settings":
+			{
+				"buffer_size": 1076,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "libraries/Waypoints/Waypoints.cpp",
+			"settings":
+			{
+				"buffer_size": 2082,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "libraries/Waypoints/Waypoints.h",
+			"settings":
+			{
+				"buffer_size": 849,
 				"line_ending": "Unix"
 			}
 		}
@@ -282,7 +319,7 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 247.0,
+		"height": 267.0,
 		"selected_items":
 		[
 			[
@@ -290,20 +327,20 @@
 				":w - Save"
 			],
 			[
-				":0",
-				":0 - BOF"
-			],
-			[
 				":ard",
 				"Set Syntax: Arduino"
 			],
 			[
-				":",
+				":q",
+				"Set Syntax: SQL"
+			],
+			[
+				":0",
 				":0 - BOF"
 			],
 			[
-				":q",
-				"Set Syntax: SQL"
+				":",
+				":0 - BOF"
 			],
 			[
 				":ww",
@@ -366,7 +403,7 @@
 				"Build: Build"
 			]
 		],
-		"width": 392.0
+		"width": 404.0
 	},
 	"console":
 	{
@@ -383,9 +420,28 @@
 	},
 	"file_history":
 	[
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/ANRAV_FINAL/ANRAV_FINAL.ino",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/Navigation_simple/Navigation_simple.ino",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/Compass_Module/HMC5883L.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_GPS/AP_GPS_NMEA.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_Compass/Compass.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_Compass/Compass.cpp",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/Compass_Module/HMC5883L.cpp",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_GPS/GPS.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_GPS/AP_GPS_HIL.cpp",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_Common/AP_Vector.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_Common/c++.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_Common/c++.cpp",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_GPS/GPS.cpp",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_GPS/AP_GPS_NMEA.cpp",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_Navigation/Navigation.cpp",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/AP_GPS/AP_GPS.h",
+		"/Users/markuskreitzer/Documents/Arduino/ANRAV_FINAL/ANRAV_FINAL.ino",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV/ANRAV.h",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/SeaVoyagerI/src/sketch.ino",
+		"/Users/markuskreitzer/code_n_scripts/ANRAV/SeaVoyagerI/lib/PID_v1.cpp",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/SHELL/SHELL.cpp",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV/ANRAV.cpp",
-		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/ANRAV/ANRAV.h",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/GUI_Stuff/ANRAV_Easy.py",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/libraries/SHELL/SHELL.h",
 		"/Users/markuskreitzer/code_n_scripts/ANRAV/ANRAV.ino",
@@ -466,6 +522,49 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"get_current_waypoint",
+			"next_wp",
+			"get_current_wp_index",
+			"load_wp_index",
+			"_index",
+			"update_gps",
+			"_index",
+			"load_first_wp",
+			"_wp.",
+			"total",
+			"_index",
+			"waypoint",
+			"newData",
+			"set_next_wp",
+			"_wp",
+			"EE",
+			"EEPROM",
+			"new ",
+			"malloc",
+			"set_wp",
+			"set_wp(Waypoints::WP loc)",
+			"void		set_wp(Waypoints::WP loc)",
+			"GPS.",
+			"gps.",
+			"Serial3.",
+			"rudder_left",
+			"get_distance",
+			"get_distnace",
+			"GPS_NMEA_Class ",
+			"GPS_NMEA_Class",
+			"get_distance",
+			"calc_bearing_error",
+			"bearing_error",
+			"calc_bearing_error",
+			"ground",
+			"ground_course",
+			"ground",
+			"ground_course",
+			"gps",
+			"ground_state",
+			"ground_course",
+			"calc_bearing_error",
+			"gps",
 			"mychoices",
 			"ruder",
 			"gap",
@@ -556,6 +655,9 @@
 		"regex": false,
 		"replace_history":
 		[
+			"gps.",
+			"GPS.",
+			"Serial2.",
 			"components",
 			"rudder",
 			"info",
@@ -590,14 +692,95 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "SeaVoyagerI/lib/PID_v1.cpp",
+					"file": "libraries/AP_Navigation/Navigation.h",
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 3263,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1224,
+								1243
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 454.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "libraries/AP_Navigation/Navigation.cpp",
+					"settings":
+					{
+						"buffer_size": 7638,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2783,
+								2783
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1503.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "libraries/Compass_Module/HMC5883L.cpp",
+					"settings":
+					{
+						"buffer_size": 3136,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								976,
+								976
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "libraries/Compass_Module/HMC5883L.h",
+					"settings":
+					{
+						"buffer_size": 1917,
 						"regions":
 						{
 						},
@@ -606,6 +789,33 @@
 							[
 								0,
 								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "libraries/GPS_NMEA/GPS_NMEA.cpp",
+					"settings":
+					{
+						"buffer_size": 8518,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1952,
+								1952
 							]
 						],
 						"settings":
@@ -621,26 +831,25 @@
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "SeaVoyagerI/src/sketch.ino",
+					"buffer": 5,
+					"file": "libraries/GPS_NMEA/GPS_NMEA.h",
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 1076,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								363,
+								363
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Stino-master/Arduino.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -649,76 +858,52 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "libraries/ANRAV/ANRAV.h",
+					"buffer": 6,
+					"file": "libraries/Waypoints/Waypoints.cpp",
 					"settings":
 					{
-						"buffer_size": 1892,
+						"buffer_size": 2082,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								1892
+								1487,
+								1487
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 853.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "/Users/markuskreitzer/Documents/Arduino/ANRAV_FINAL/ANRAV_FINAL.ino",
+					"buffer": 7,
+					"file": "libraries/Waypoints/Waypoints.h",
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 849,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								19,
+								19
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Stino-master/Arduino.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2530.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "libraries/AP_GPS/AP_GPS.h",
-					"settings":
-					{
-						"buffer_size": 526,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								164,
-								189
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

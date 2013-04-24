@@ -10,6 +10,11 @@
 #include <stdlib.h>
 #include "c++.h"
 #include "Arduino.h"
+#include <BetterStream.h>
+#include <FastSerial.h>
+#include <ftoa_engine.h>
+#include <ntz.h>
+#include <xtoa_fast.h>
 
 void * operator new(size_t size)
 {

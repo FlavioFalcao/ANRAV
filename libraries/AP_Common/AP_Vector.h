@@ -22,6 +22,11 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <Arduino.h>
+#include <BetterStream.h>
+#include <FastSerial.h>
+#include <ftoa_engine.h>
+#include <ntz.h>
+#include <xtoa_fast.h>
 
 #ifdef ASSERT
 const static char vectorSource[] ="Vector.hpp";

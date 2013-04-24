@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h> 
 #include "HMC5883L.h"
+#include <Wire.h>
+
 
 HMC5883L::HMC5883L()
 {

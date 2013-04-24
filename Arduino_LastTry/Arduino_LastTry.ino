@@ -1,16 +1,9 @@
-/*
-  Example of GPS NMEA library.
-  Code by Jordi Mu�oz and Jose Julio. DIYDrones.com
-
-  Works with Ardupilot Mega Hardware (GPS on Serial Port1)
-  and with standard ATMega168 and ATMega328 on Serial Port 0
-*/
-
 #include <GPS_NMEA.h> // NMEA GPS Library
 
 void setup()
 {
   Serial.begin(9600);
+  Serial2.begin(9600);
   Serial.println("GPS NMEA library test");
   GPS.Init();   // GPS Initialization
   delay(1000);

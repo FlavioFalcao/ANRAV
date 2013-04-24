@@ -25,9 +25,6 @@
 /// TinyGPS parser by Mikal Hart.
 ///
 
-#include <FastSerial.h>
-#include <AP_Common.h>
-
 #include <avr/pgmspace.h>
 #include <ctype.h>
 #include <stdint.h>

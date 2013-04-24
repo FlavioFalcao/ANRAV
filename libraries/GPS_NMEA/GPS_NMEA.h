@@ -41,6 +41,6 @@ class GPS_NMEA_Class
 	int HDOP;            // HDOP
 };
 
-extern GPS_NMEA_Class GPS;
+//extern GPS_NMEA_Class GPS;
 
 #endif
