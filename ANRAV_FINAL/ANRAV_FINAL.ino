@@ -40,15 +40,15 @@ static const char motorpin  = 9;
 static const char rudderpin = 10;
 
 // Temperature Sensors (Must be analog)
-static const char temppin1 = 11;
-static const char temppin2 = 12;
-static const char temppin3 = 13;
+static const char temppin1 = A0;
+static const char temppin2 = 1;
+static const char temppin3 = 2;
 static const char geigerpin = 2;
 volatile unsigned long counts = 0; // total counts
 unsigned long start_time = 0; // start time for measurements in milliseconds
 unsigned int measurement_interval = 1000; // measurement interval in milliseconds
 volatile int state = LOW;
-float radrate = 0;
+int radrate = 0;
 
 // Propulsion and Steering
 static const char rudder_center = 45;
@@ -435,11 +435,16 @@ void intializeCount() // zero out counts and set start_time to seconds since pow
   start_time = millis(); // start time in millis
 }
 
-float getRate() // return current rate in counts per second and zero out measurments
+int getRate() // return current rate in counts per minute and zero out measurments
 {
-  float rate = (float) counts * 60 / ((float) (millis() - start_time) / 1000.0); // counts per second
+  int rate = counts * 60 / ((millis() - start_time) / 1000); // counts per minute
   intializeCount();
   return rate;
+}
+
+int getTemp(int analog_pin)
+{
+  return map(analogRead(analog_pin), 0, 1023, 0, 500); // 10mV per degree C, 5V max
 }
 
 
@@ -583,6 +588,9 @@ void loop()
     // For Sarah
     Serial1.print("RADIATION,");
     Serial1.print(radrate);
+    Serial1.print(",");
+    Serial1.print("TEMPERATURE_1,");
+    Serial1.print(getTemp(0));
     Serial1.print(",");
     Serial1.print(gps.Lattitude);
     Serial1.print(",");
