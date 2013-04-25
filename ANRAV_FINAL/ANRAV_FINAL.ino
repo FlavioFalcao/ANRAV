@@ -590,7 +590,9 @@ void loop()
       Serial1.print("RATE,");
       Serial1.print(radrate);
       Serial1.print(",TEMP_1,");
-      Serial1.print(getTemp(0));
+      Serial1.print(getTemp(temppin1));
+      Serial1.print(",TEMP_2,");
+      Serial1.print(getTemp(temppin2));
       Serial1.print(",TIME,");
       Serial1.print(gps.Time);
       Serial1.print(",");
