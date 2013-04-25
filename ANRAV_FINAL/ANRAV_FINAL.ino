@@ -46,7 +46,7 @@ static const char temppin3 = 2;
 static const char geigerpin = 2;
 volatile unsigned long counts = 0; // total counts
 unsigned long start_time = 0; // start time for measurements in milliseconds
-unsigned int measurement_interval = 1000; // measurement interval in milliseconds
+unsigned int measurement_interval = 5000; // measurement interval in milliseconds
 volatile int state = LOW;
 int radrate = 0;
 
@@ -161,7 +161,7 @@ int setupCompass(){
     Serial1.println(compass.GetErrorText(error));
     return 1;
   } 
-return 0;
+  return 0;
 }
 
 float getCurrentBearing(){
@@ -497,7 +497,6 @@ void setup() {
   Serial1.println(wp.get_index());
   attachInterrupt(0, rad_event, RISING); // attach interrupt for Geiger counter
   intializeCount();	
-
 }
 
 
@@ -505,111 +504,120 @@ void loop()
 {
   if( Serial1.available())
   {
+    Serial1.println("Entering manual control.");
     manualLoop();
     Serial1.println("Exited manual control.");
   }
+  gps.Read();
   if (millis() - start_time > measurement_interval)
   {
     //Serial1.print("Counts per minute: ");
     radrate = getRate();
     //Serial1.println(radrate);
-  }
-  gps.Read();
-  if (gps.NewData)  // New GPS data?
-  {
-    nav.update_gps(gps.Altitude,gps.Longitude,gps.Lattitude,gps.Ground_Course);
-    long distance_gps = nav.distance;
-    long bearing_gps = nav.bearing;
-    // Print Debug Info:
-    // Goes to USB
-    Serial.println("GPS Debug Data:");
-    Serial.print("Number of Sattelites: ");
-    Serial.println(gps.NumSats);
-    Serial.print("GPS Signal Quality:");
-    Serial.println(gps.Quality);
-    Serial.print("GPS Fix:");
-    Serial.println(gps.Fix);   
-    Serial.print(" Time:");
-    Serial.print(gps.Time);
-    Serial.print(" Fix:");
-    Serial.print((int)gps.Fix);
-    Serial.print(" Lat:");
-    Serial.print(gps.Lattitude);
-    Serial.print(" Lon:");
-    Serial.print(gps.Longitude);
-    Serial.print(" Alt:");
-    Serial.print(gps.Altitude/1000.0);
-    Serial.print(" Speed:");
-    Serial.print(gps.Ground_Speed/100.0);
-    Serial.print(" Course:");
-    Serial.println(gps.Ground_Course/100.0);
-    Serial.print(" Compass Heading: ");
-    Serial.println(getCurrentBearing());
-    //
-    //Goes to Xbee
-//    Serial1.println("GPS Debug Data:");
-//    Serial1.print("Number of Sattelites: ");
-//    Serial1.println(gps.NumSats);
-//    Serial1.print("GPS Signal Quality:");
-//    Serial1.println(gps.Quality);
-//    Serial1.print(" Time:");
-//    Serial1.print(gps.Time);
-//    Serial1.print(" Fix:");
-//    Serial1.print((int)gps.Fix);
-//    Serial1.print(" Lat:");
-//    Serial1.print(gps.Lattitude);
-//    Serial1.print(" Lon:");
-//    Serial1.print(gps.Longitude);
-//    Serial1.print(" Alt:");
-//    Serial1.print(gps.Altitude/1000.0);
-//    Serial1.print(" Speed:");
-//    Serial1.print(gps.Ground_Speed/100.0);
-//    Serial1.print(" Course:");
-//    Serial1.println(gps.Ground_Course/100.0);
-//    Serial1.print(" Compass Heading: ");
-//    Serial1.println(getCurrentBearing());
-//    Serial1.println();
-//    //
-//    Serial.println("Next Destination:");
-//    Serial1.println("Next Destination:");
-//    printwaypoint( &(nav.next_wp) );
-//    Serial.print("Distance = ");
-//    Serial.println(distance_gps,DEC);  
-//    Serial.print(" Bearing = ");
-//    Serial.println(bearing_gps, DEC);
-//    Serial.println();
-//    Serial.println("\n\n\n");
-//    //
-//    Serial1.print("Distance = ");
-//    Serial1.println(distance_gps,DEC);  
-//    Serial1.print(" Bearing = ");
-//    Serial1.println(bearing_gps, DEC);
-//    Serial1.println("\n\n\n");
-    // For Sarah
-    Serial1.print("RADIATION,");
-    Serial1.print(radrate);
-    Serial1.print(",");
-    Serial1.print("TEMPERATURE_1,");
-    Serial1.print(getTemp(0));
-    Serial1.print(",");
-    Serial1.print(gps.Lattitude);
-    Serial1.print(",");
-    Serial1.println(gps.Longitude);
-    gps.NewData = 0;
-    delay(1000);
+
+    //gps.Read();
+    if (gps.NewData)  // New GPS data?
+    {
+      nav.update_gps(gps.Altitude,gps.Longitude,gps.Lattitude,gps.Ground_Course);
+      long distance_gps = nav.distance;
+      long bearing_gps = nav.bearing;
+      // Print Debug Info:
+      // Goes to USB
+      Serial.println("GPS Debug Data:");
+      Serial.print("Number of Sattelites: ");
+      Serial.println(gps.NumSats);
+      Serial.print("GPS Signal Quality:");
+      Serial.println(gps.Quality);
+      Serial.print("GPS Fix:");
+      Serial.println(gps.Fix);   
+      Serial.print(" Time:");
+      Serial.print(gps.Time);
+      Serial.print(" Fix:");
+      Serial.print((int)gps.Fix);
+      Serial.print(" Lat:");
+      Serial.print(gps.Lattitude);
+      Serial.print(" Lon:");
+      Serial.print(gps.Longitude);
+      Serial.print(" Alt:");
+      Serial.print(gps.Altitude/1000.0);
+      Serial.print(" Speed:");
+      Serial.print(gps.Ground_Speed/100.0);
+      Serial.print(" Course:");
+      Serial.println(gps.Ground_Course/100.0);
+      Serial.print(" Compass Heading: ");
+      Serial.println(getCurrentBearing());
+      //
+      //Goes to Xbee
+      //    Serial1.println("GPS Debug Data:");
+      //    Serial1.print("Number of Sattelites: ");
+      //    Serial1.println(gps.NumSats);
+      //    Serial1.print("GPS Signal Quality:");
+      //    Serial1.println(gps.Quality);
+      //    Serial1.print(" Time:");
+      //    Serial1.print(gps.Time);
+      //    Serial1.print(" Fix:");
+      //    Serial1.print((int)gps.Fix);
+      //    Serial1.print(" Lat:");
+      //    Serial1.print(gps.Lattitude);
+      //    Serial1.print(" Lon:");
+      //    Serial1.print(gps.Longitude);
+      //    Serial1.print(" Alt:");
+      //    Serial1.print(gps.Altitude/1000.0);
+      //    Serial1.print(" Speed:");
+      //    Serial1.print(gps.Ground_Speed/100.0);
+      //    Serial1.print(" Course:");
+      //    Serial1.println(gps.Ground_Course/100.0);
+      //    Serial1.print(" Compass Heading: ");
+      //    Serial1.println(getCurrentBearing());
+      //    Serial1.println();
+      //    //
+      //    Serial.println("Next Destination:");
+      //    Serial1.println("Next Destination:");
+      //    printwaypoint( &(nav.next_wp) );
+      //    Serial.print("Distance = ");
+      //    Serial.println(distance_gps,DEC);  
+      //    Serial.print(" Bearing = ");
+      //    Serial.println(bearing_gps, DEC);
+      //    Serial.println();
+      //    Serial.println("\n\n\n");
+      //    //
+      //    Serial1.print("Distance = ");
+      //    Serial1.println(distance_gps,DEC);  
+      //    Serial1.print(" Bearing = ");
+      //    Serial1.println(bearing_gps, DEC);
+      //    Serial1.println("\n\n\n");
+      // For Sarah
+      Serial1.print("RATE,");
+      Serial1.print(radrate);
+      Serial1.print(",TEMP_1,");
+      Serial1.print(getTemp(0));
+      Serial1.print(",TIME,");
+      Serial1.print(gps.Time);
+      Serial1.print(",");
+      Serial1.print(gps.Lattitude);
+      Serial1.print(",");
+      Serial1.println(gps.Longitude);
+      gps.NewData = 0;
+      //delay(1000);
+    }
   }
 }
-    //    if( gps.Fix != 0){
-    //      Serial.println("No GPS Fix.");
-    //      Serial1.println("No GPS Fix.");
-    //    }
-    // Navigation Code
+//    if( gps.Fix != 0){
+//      Serial.println("No GPS Fix.");
+//      Serial1.println("No GPS Fix.");
+//    }
+// Navigation Code
 
-    //    Serial1.print("Current Destination Index: ");
-    //    Serial1.print(nav.get_current_wp_index());
-    //    Serial1.print(",");
-    //    Serial1.print(wp.get_index());
-    //    Serial1.print("\n");
+//    Serial1.print("Current Destination Index: ");
+//    Serial1.print(nav.get_current_wp_index());
+//    Serial1.print(",");
+//    Serial1.print(wp.get_index());
+//    Serial1.print("\n");
+
+
+
+
+
 
 
 
