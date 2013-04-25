@@ -40,7 +40,7 @@ static const char motorpin  = 9;
 static const char rudderpin = 10;
 
 // Temperature Sensors (Must be analog)
-static const char temppin1 = A0;
+static const char temppin1 = 0;
 static const char temppin2 = 1;
 static const char temppin3 = 2;
 static const char geigerpin = 2;
