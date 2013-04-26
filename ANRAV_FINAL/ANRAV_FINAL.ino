@@ -32,8 +32,8 @@ static const char I2C_SDA  = 4;
 static const char I2C_SCL  = 5;
 
 // Current Sensors
-static const char current1pin = 6;
-static const char current2pin = 7;
+static const char battCurrentPin = 2;
+static const char solarCurrentPin = 3;
 
 // Motors
 static const char motorpin  = 9;
@@ -42,7 +42,6 @@ static const char rudderpin = 10;
 // Temperature Sensors (Must be analog)
 static const char temppin1 = 0;
 static const char temppin2 = 1;
-static const char temppin3 = 2;
 static const char geigerpin = 2;
 volatile unsigned long counts = 0; // total counts
 unsigned long start_time = 0; // start time for measurements in milliseconds
@@ -94,12 +93,18 @@ char *getDateTime();
 // Navigation
 void loadWayPoint();
 void storeWayPoint();
-float  getCurrentBearing();
+int32_t getCurrentHeading();
 int  calcDestBearing();
 int  calcDestDistance();
 int  calcSetPoint();
 int  calcGap();
-int  getShortAngle(int a1, int a2);
+
+int calcGap(float bearing, float heading )
+{
+  //getShortAngle(bearing - heading) 
+
+}
+int32_t getShortAngle(int32_t a1, int32_t a2);
 bool goalReached();
 
 // Controls
@@ -138,8 +143,8 @@ void setMotor(char motor_speed){
 }
 
 // Gets two angles and returns the smallest angle.
-int getShortAngle(int a1, int a2){
-  int angle = (abs(a1 - a2)) % 360;
+int32_t getShortAngle(int32_t a1, int32_t a2){
+  int32_t angle = (abs(a1 - a2)) % 360;
   if(angle > 180){
     angle = 360 - angle;
   }
@@ -164,7 +169,7 @@ int setupCompass(){
   return 0;
 }
 
-float getCurrentBearing(){
+int32_t getCurrentHeading_working(){
   MagnetometerRaw raw = compass.ReadRawAxis();
   MagnetometerScaled scaled = compass.ReadScaledAxis();
   float xHeading = atan2(scaled.YAxis, scaled.XAxis);
@@ -186,17 +191,17 @@ float getCurrentBearing(){
   //Serial.print(zDegrees,DEC);
   //Serial.println(";");  
   //delay(100);
-  return yDegrees;
+  return (int32_t) yDegrees * 100;
 }
-float  getCurrentBearing_broke(){
+int32_t getCurrentHeading(){
   MagnetometerRaw raw = compass.ReadRawAxis();
   MagnetometerScaled scaled = compass.ReadScaledAxis();
   //int32_t MilliGauss_OnThe_XAxis = scaled.XAxis;// (or YAxis, or ZAxis)
   // Calculate heading when the magnetometer is level, then correct for signs of axis.
-  Serial1.print("scaled Y: ");
-  Serial1.println(scaled.YAxis);
-  Serial1.print("scaled X: ");
-  Serial1.println(scaled.XAxis);
+  //Serial1.print("scaled Y: ");
+  //Serial1.println(scaled.YAxis);
+  //Serial1.print("scaled X: ");
+  //Serial1.println(scaled.XAxis);
   float heading = atan2(scaled.YAxis, scaled.XAxis);
 
   // Once you have your heading, you must then add your 'Declination Angle', which is the 'Error' of the magnetic field in your location.
@@ -220,25 +225,12 @@ float  getCurrentBearing_broke(){
   // Output the data via the serial port.
   //Output(raw, scaled, heading, headingDegrees);
   //delay(66);
-  return headingDegrees;
+  return (int32_t) (headingDegrees * 100);
   // Normally we would delay the application by 66ms to allow the loop
   // to run at 15Hz (default bandwidth for the HMC5883L).
   // However since we have a long serial out (104ms at 9600) we will let
   // it run at its natural speed.
   //delay(66);
-}
-
-int  calcDestBearing(){
-  //
-  return 0;
-}
-int  calcDestDistance(){
-  //
-  return 0;
-}
-
-int  calcSetPoint(){
-  return 0;
 }
 
 // Returns true if goal is reached, false if not there yet.
@@ -447,6 +439,15 @@ int getTemp(int analog_pin)
   return map(analogRead(analog_pin), 0, 1023, 0, 500); // 10mV per degree C, 5V max
 }
 
+int getBattCurrent()
+{
+  return map(analogRead(battCurrentPin), 0, 1023, 0, 16667);
+}
+
+int getSolarCurrent()
+{
+  return map(analogRead(solarCurrentPin), 0, 1023, 0, 500);
+}
 
 void setup() {                
   // Nothing
@@ -472,21 +473,28 @@ void setup() {
   //  // 32.604901,-85.486373
   //  Waypoints::WP Broun = {
   //    0, 0, 32.604901 * T7, -85.486373 * T7, 5000                                  };
-  Waypoints::WP Magnolia;
-  Magnolia.lat = 32.606373*T7;
-  Magnolia.lng = -85.486306 * T7;
-  Waypoints::WP Broun;
-  Broun.lat = 32.606373*T7;
-  Broun.lng = -85.486306 * T7;
+  // Waypoints::WP Magnolia;
+  // Magnolia.lat = 32.606373*T7;
+  // Magnolia.lng = -85.486306 * T7;
+  // Waypoints::WP Broun;
+  // Broun.lat = 32.606373*T7;
+  // Broun.lng = -85.486306 * T7;
   //
+  Waypoints::WP Home;
+  Home.lat = 32.580202 * T7;
+  Home.lng = -85.529094 * T7;
+  Waypoints::WP Dest;
+  Dest.lat = 32.579736 * T7;
+  Dest.lng = -85.529568 * T7;
+
   wp.set_total(3);
   wp.set_index(1);
   Serial1.print("Total: ");
   Serial1.println(wp.get_total());
   //Serial1.print("Current Index!: ");
   //Serial1.println(wp.get_index());
-  wp.set_waypoint_with_index(Broun,0);
-  wp.set_waypoint_with_index(Magnolia,1);
+  wp.set_waypoint_with_index(Home,0);
+  wp.set_waypoint_with_index(Dest,1);
 
   nav.set_wp(&wp);
   nav.load_home();
@@ -519,8 +527,8 @@ void loop()
     if (gps.NewData)  // New GPS data?
     {
       nav.update_gps(gps.Altitude,gps.Longitude,gps.Lattitude,gps.Ground_Course);
-      long distance_gps = nav.distance;
-      long bearing_gps = nav.bearing;
+      //long distance_gps = nav.distance;
+      //float bearing_gps = (nav.bearing/100);
       // Print Debug Info:
       // Goes to USB
       Serial.println("GPS Debug Data:");
@@ -545,7 +553,7 @@ void loop()
       Serial.print(" Course:");
       Serial.println(gps.Ground_Course/100.0);
       Serial.print(" Compass Heading: ");
-      Serial.println(getCurrentBearing());
+      Serial.println(getCurrentHeading());
       //
       //Goes to Xbee
       //    Serial1.println("GPS Debug Data:");
@@ -568,7 +576,7 @@ void loop()
       //    Serial1.print(" Course:");
       //    Serial1.println(gps.Ground_Course/100.0);
       //    Serial1.print(" Compass Heading: ");
-      //    Serial1.println(getCurrentBearing());
+      //    Serial1.println(getCurrentHeading());
       //    Serial1.println();
       //    //
       //    Serial.println("Next Destination:");
@@ -587,29 +595,38 @@ void loop()
       //    Serial1.println(bearing_gps, DEC);
       //    Serial1.println("\n\n\n");
       // For Sarah
-      Serial1.print("RATE,");
+      //Serial1.print("RATE,");
       Serial1.print(radrate);
-      Serial1.print(",TEMP_1,");
+      Serial1.print(",");
       Serial1.print(getTemp(temppin1));
-      Serial1.print(",TEMP_2,");
+      Serial1.print(",");
       Serial1.print(getTemp(temppin2));
-      Serial1.print(",TIME,");
+      Serial1.print(",");
+      Serial1.print(getBattCurrent());
+      Serial1.print(",");
+      Serial1.print(getSolarCurrent());
+      Serial1.print(",");
       Serial1.print(gps.Time);
       Serial1.print(",");
       Serial1.print(gps.Lattitude);
       Serial1.print(",");
-      Serial1.println(gps.Longitude);
+      Serial1.print(gps.Longitude);
+      Serial1.print(",");
+      Serial1.println(nav.distance);
+      Serial1.print(", Calculated Bearing: ");
+      Serial1.println( (nav.bearing/100) );
+      Serial1.print(", Current Heading: ");
+      Serial1.println(getCurrentHeading()/100);
       gps.NewData = 0;
+      //Serial1.println(calcGap(gps.bearing,getCurrentHeading()) );
+      Serial1.print("Calculated Short Angle: ");
+      Serial1.println(getShortAngle(nav.bearing,getCurrentHeading())/100 );
       //delay(1000);
     }
   }
 }
-//    if( gps.Fix != 0){
-//      Serial.println("No GPS Fix.");
-//      Serial1.println("No GPS Fix.");
-//    }
-// Navigation Code
 
+// Navigation Code
 //    Serial1.print("Current Destination Index: ");
 //    Serial1.print(nav.get_current_wp_index());
 //    Serial1.print(",");
